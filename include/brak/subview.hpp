@@ -1,5 +1,5 @@
-#ifndef __BRACKETS_ADAPTER_HPP__
-#define __BRACKETS_ADAPTER_HPP__
+#ifndef __BRAK_SUBVIEW_HPP__
+#define __BRAK_SUBVIEW_HPP__
 
 #include <type_traits>
 
@@ -18,7 +18,7 @@ class BracketsWrapperSubview {
 
   /**
    * Wrapped view.
-   * We use the fact that a subview is a view.
+   * We use the fact that a subview is actually a view.
    */
   View mData;
 
@@ -43,9 +43,14 @@ public:
    * has a dimension of 1.
    */
   decltype(auto) operator[](std::size_t const index) {
+    // NOTE The `decltype(auto)` allows to return either a value (a new instance
+    // of the class) or a reference to a value (a scalar).
+
     if constexpr (getRank() > 1) {
-      // return brackets adapter of the subview
+      // return wrapper of the subview
       return ::BracketsWrapperSubview(getSubview(index));
+      // NOTE The `::` allows to call the template class, instead of the current
+      // specialized class.
     } else {
       // return a reference to a scalar
       return mData(index);
@@ -77,6 +82,10 @@ private:
   auto getSubview(std::size_t const index) {
     static_assert(getRank() <= 8, "Rank of view too large");
     static_assert(getRank() > 1, "Rank of view too small");
+
+    // NOTE It's probably possible to write templated code to not handle all
+    // the dimensions manually, but it's a lot of troubles for may 8
+    // dimensions.
 
     if constexpr (getRank() == 8) {
       // return a subview of rank 7
@@ -110,4 +119,4 @@ private:
   }
 };
 
-#endif // ifndef __BRACKETS_ADAPTER_HPP__
+#endif // ifndef __BRAK_SUBVIEW_HPP__
