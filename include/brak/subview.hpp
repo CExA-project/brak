@@ -5,6 +5,8 @@
 
 #include <Kokkos_Core.hpp>
 
+namespace brak {
+
 /**
  * Wrapper based on subviews.
  */
@@ -118,5 +120,7 @@ private:
     }
   }
 };
+
+} // namespace brak
 
 #endif // ifndef __BRAK_SUBVIEW_HPP__

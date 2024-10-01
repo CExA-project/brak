@@ -6,7 +6,7 @@
 
 TEST(test_brackets_wrapper_subview, test_create) {
   Kokkos::View<int **> data{"data", 10, 10};
-  BracketsWrapperSubview dataWrapper{data};
+  brak::BracketsWrapperSubview dataWrapper{data};
 
   static_assert(decltype(dataWrapper)::getRank() == 2);
 }
@@ -14,7 +14,7 @@ TEST(test_brackets_wrapper_subview, test_create) {
 TEST(test_brackets_wrapper_subview, test_access) {
   Kokkos::View<int ********> data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
 
-  BracketsWrapperSubview dataWrapper8D{data};
+  brak::BracketsWrapperSubview dataWrapper8D{data};
   static_assert(decltype(dataWrapper8D)::getRank() == 8);
 
   auto dataWrapper7D = dataWrapper8D[1];
@@ -42,7 +42,7 @@ TEST(test_brackets_wrapper_subview, test_access) {
 TEST(test_brackets_wrapper_subview, test_access_direct) {
   Kokkos::View<int ********> data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
 
-  BracketsWrapperSubview dataWrapper8D{data};
+  brak::BracketsWrapperSubview dataWrapper8D{data};
   static_assert(decltype(dataWrapper8D)::getRank() == 8);
   static_assert(decltype(dataWrapper8D[1])::getRank() == 7);
   static_assert(decltype(dataWrapper8D[1][1])::getRank() == 6);
@@ -55,7 +55,7 @@ TEST(test_brackets_wrapper_subview, test_access_direct) {
 
 TEST(test_brackets_wrapper_subview, test_write_1d) {
   Kokkos::View<int *, Kokkos::HostSpace> data{"data", 10};
-  BracketsWrapperSubview dataWrapper{data};
+  brak::BracketsWrapperSubview dataWrapper{data};
 
   ASSERT_EQ(data(1), 0);
 
@@ -66,14 +66,14 @@ TEST(test_brackets_wrapper_subview, test_write_1d) {
 
 TEST(test_brackets_wrapper_subview, test_defer) {
   Kokkos::View<int *, Kokkos::HostSpace> data{"data", 10};
-  BracketsWrapperSubview dataWrapper{data};
+  brak::BracketsWrapperSubview dataWrapper{data};
 
   ASSERT_EQ(data.data(), *dataWrapper);
 }
 
 TEST(test_brackets_wrapper_subview, test_get_view) {
   Kokkos::View<int **> data{"data", 10, 10};
-  BracketsWrapperSubview dataWrapper{data};
+  brak::BracketsWrapperSubview dataWrapper{data};
   auto dataView = dataWrapper.getView();
 
   static_assert(std::is_same_v<decltype(data), decltype(dataView)>);
