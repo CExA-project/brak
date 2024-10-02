@@ -50,9 +50,9 @@ public:
 
     if constexpr (getRank() > 1) {
       // return wrapper of the subview
-      return ::BracketsWrapperSubview(getSubview(index));
-      // NOTE The `::` allows to call the template class, instead of the current
-      // specialized class.
+      return brak::BracketsWrapperSubview(getSubview(index));
+      // NOTE The `brak::` allows to call the template class, instead of the
+      // current 'specialized' one.
     } else {
       // return a reference to a scalar
       return mData(index);
