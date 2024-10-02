@@ -50,9 +50,11 @@ public:
 
     if constexpr (getRank() > 1) {
       // return wrapper of the subview
-      return brak::BracketsWrapperSubview(getSubview(index));
-      // NOTE The `brak::` allows to call the template class, instead of the
-      // current 'specialized' one.
+      auto subview = getSubview(index);
+      return BracketsWrapperSubview<decltype(subview)>(subview);
+      // NOTE The manual passing of the subview type is necessary for NVCC that
+      // doesn't do CTAD. (Instead, one would just have used `brak::` to call
+      // the template class and not the current one.)
     } else {
       // return a reference to a scalar
       return mData(index);
@@ -86,8 +88,7 @@ private:
     static_assert(getRank() > 1, "Rank of view too small");
 
     // NOTE It's probably possible to write templated code to not handle all
-    // the dimensions manually, but it's a lot of troubles for may 8
-    // dimensions.
+    // the dimensions manually, but it's a lot of troubles for 8 dimensions.
 
     if constexpr (getRank() == 8) {
       // return a subview of rank 7
