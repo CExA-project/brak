@@ -23,3 +23,7 @@ endif()
 # if(BRAK_ENABLE_EXAMPLES)
 #     add_subdirectory(examples)
 # endif()
+
+if(BRAK_ENABLE_BENCHMARKS)
+    add_subdirectory(benchmarks)
+endif()

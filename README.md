@@ -88,6 +88,11 @@ If you don't have a GPU available when compiling, you have to disable the CMake 
 <!-- You can build examples with the CMake option `BRAK_ENABLE_EXAMPLES`. -->
 <!-- They should be run individually. -->
 
+## Benchmarks
+
+Benchmarks are built with the CMake option `BRAK_ENABLE_BENCHMARKS`.
+They should be run individually.
+
 ## Use
 
 The library provides a way using Kokkos subviews to achieve its objective.

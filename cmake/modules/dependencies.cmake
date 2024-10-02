@@ -22,3 +22,15 @@ if(BRAK_ENABLE_TESTS)
         include(GoogleTest)
     endif()
 endif()
+
+if(BRAK_ENABLE_BENCHMARKS)
+    find_package(benchmark 1.9.0 QUIET)
+    if(NOT benchmark_FOUND)
+        message(STATUS "Treating Google benchmark as an internal dependency")
+        FetchContent_Declare(
+            googlebenchmark
+            URL https://github.com/google/benchmark/archive/refs/tags/v1.9.0.tar.gz
+        )
+        FetchContent_MakeAvailable(googlebenchmark)
+    endif()
+endif()
