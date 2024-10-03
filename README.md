@@ -95,25 +95,37 @@ They should be run individually.
 
 ## Use
 
-The library provides a way using Kokkos subviews to achieve its objective.
-
-### Subview wrapper approach
-
-With this approach, each pair of brackets uses a subview of its parent element.
-The class `brak::BracketsWrapperSubview` wraps a view, and each call to the brackets operator gives a new instance of the class wrapping a subview.
-If the number of pair of brackets is the same as the rank of the view, then the resulting object is a scalar.
+The library allows to wrap a Kokkos view to use it like a plain old C array.
+If the number of pair of brackets is the same as the rank of the view, then the resulting object is a scalar:
 
 ```cpp
 #include <Kokkos_Core.hpp>
 #include "brak/subview.hpp"
+// or
+#include "brak/compute.hpp"
 
 void doSomething() {
   Kokkos::View<int ********> data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
   brak::BracketsWrapperSubview dataWrapper{data};
+  // or
+  brak::BracketsWrapperCompute dataWrapper{data};
 
   dataWrapper[0][0][0][0][0][0][0] = 10;
 }
 ```
 
+To achieve this, two implementations are proposed (they share the same API).
+
+### Subview wrapper approach
+
+With this approach, the class `brak::BracketsWrapperSubview` wraps a view, and each call to the brackets operator gives a new instance of the class wrapping a subview.
+
 This approach is very inefficient in terms of performance at compile time and at runtime, due to the extra overhead.
-For a view of rank 8, the build is 22 % slower than using the parenthesis operator directly, and the execution is 200 times slower.
+For a view of rank 8, the build is 22 % slower than using the parenthesis operator directly, and the execution is 180 times slower.
+
+### Compute wrapper approach
+
+With this different approach, the class `brak::BracketsWrapperCompute` wraps a view, and each call to the brackets operator gives a sub-wrapper that also stores the list of the requested indices.
+
+This approach is a bit less inefficient than the subview approach.
+For a view of rank 8, the build is 3 % slower than using the parenthesis operator directly, and the execution is 120 times slower.
