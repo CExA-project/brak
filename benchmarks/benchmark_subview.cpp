@@ -2,8 +2,9 @@
 #include <benchmark/benchmark.h>
 
 #include <brak/subview.hpp>
+#include <brak/compute.hpp>
 
-void benchmarkSetWrapper(benchmark::State &state) {
+void benchmark_set_wrapper_subview(benchmark::State &state) {
   Kokkos::View<int ********> data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
   brak::BracketsWrapperSubview dataWrapper{data};
 
@@ -12,15 +13,25 @@ void benchmarkSetWrapper(benchmark::State &state) {
   }
 }
 
-BENCHMARK(benchmarkSetWrapper);
+BENCHMARK(benchmark_set_wrapper_subview);
 
-void benchmarkSetView(benchmark::State &state) {
-  [[maybe_unused]] Kokkos::View<int ********> data{"data", 2, 2, 2, 2,
-                                                   2,      2, 2, 2};
+void benchmark_set_wrapper_compute(benchmark::State &state) {
+  Kokkos::View<int ********> data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
+  brak::BracketsWrapperCompute dataWrapper{data};
+
+  while (state.KeepRunning()) {
+    dataWrapper[1][1][1][1][1][1][1][1] = 10;
+  }
+}
+
+BENCHMARK(benchmark_set_wrapper_compute);
+
+void benchmark_set_view(benchmark::State &state) {
+  Kokkos::View<int ********> data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
 
   while (state.KeepRunning()) {
     data(1, 1, 1, 1, 1, 1, 1, 1) = 10;
   }
 }
 
-BENCHMARK(benchmarkSetView);
+BENCHMARK(benchmark_set_view);
