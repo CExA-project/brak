@@ -88,7 +88,8 @@ private:
     static_assert(getRank() > 1, "Rank of view too small");
 
     // NOTE It's probably possible to write templated code to not handle all
-    // the dimensions manually, but it's a lot of troubles for 8 dimensions.
+    // the dimensions manually, but it's a lot of troubles for just 8
+    // dimensions.
 
     auto &ALL = Kokkos::ALL;
 

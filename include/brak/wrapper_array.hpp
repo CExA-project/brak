@@ -73,9 +73,9 @@ public:
     // recreate array of indices
     Kokkos::Array<std::size_t, depth + 1> indices;
     if constexpr (mIndices.size() > 0) {
-        for (std::size_t i = 0; i < mIndices.size(); i++) {
-          indices[i] = mIndices[i];
-        }
+      for (std::size_t i = 0; i < mIndices.size(); i++) {
+        indices[i] = mIndices[i];
+      }
     }
     indices[depth] = index;
 
@@ -105,15 +105,21 @@ public:
 private:
   /**
    * Get the scalar value of the wrapped view.
-   * @param i List of indices above the sub-wrapper.
+   * @param indices List of indices above the sub-wrapper.
    * @return Scalar value of the view.
    * @note Can only be used when the rank of the wrapped view is between 1
    * and 8.
    */
   KOKKOS_FUNCTION
-  auto &getValue(Kokkos::Array<std::size_t, depth + 1> const &i) const {
+  auto &getValue(Kokkos::Array<std::size_t, depth + 1> const &indices) const {
     static_assert(getRankSource() <= 8, "Rank of view too large");
     static_assert(getRankSource() > 0, "Rank of view too small");
+
+    // NOTE It's probably possible to write templated code to not handle all
+    // the dimensions manually, but it's a lot of troubles for just 8
+    // dimensions.
+
+    auto &i = indices;
 
     if constexpr (getRankSource() == 8) {
       return mData(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
