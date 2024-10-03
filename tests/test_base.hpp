@@ -12,7 +12,8 @@
 #define GET_TEST_NAME_NX(A, B) A##B
 #define GET_TEST_NAME_INTEGRATION_NX(A, B, C) A##B##C
 #define GET_TEST_NAME(NAME) GET_TEST_NAME_NX(test_, NAME)
-#define GET_TEST_NAME_INTEGRATION(NAME) GET_TEST_NAME_INTEGRATION_NX(test_, NAME, _integration)
+#define GET_TEST_NAME_INTEGRATION(NAME)                                        \
+  GET_TEST_NAME_INTEGRATION_NX(test_, NAME, _integration)
 
 TEST(GET_TEST_NAME(WRAPPER_NAME), test_create) {
   Kokkos::View<int **> data{"data", 10, 10};
