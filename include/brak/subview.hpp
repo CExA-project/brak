@@ -90,34 +90,29 @@ private:
     // NOTE It's probably possible to write templated code to not handle all
     // the dimensions manually, but it's a lot of troubles for 8 dimensions.
 
+    auto& ALL = Kokkos::ALL;
+
     if constexpr (getRank() == 8) {
       // return a subview of rank 7
-      return Kokkos::subview(mData, index, Kokkos::ALL, Kokkos::ALL,
-                             Kokkos::ALL, Kokkos::ALL, Kokkos::ALL, Kokkos::ALL,
-                             Kokkos::ALL);
+      return Kokkos::subview(mData, index, ALL, ALL, ALL, ALL, ALL, ALL, ALL);
     } else if constexpr (getRank() == 7) {
       // return a subview of rank 6
-      return Kokkos::subview(mData, index, Kokkos::ALL, Kokkos::ALL,
-                             Kokkos::ALL, Kokkos::ALL, Kokkos::ALL,
-                             Kokkos::ALL);
+      return Kokkos::subview(mData, index, ALL, ALL, ALL, ALL, ALL, ALL);
     } else if constexpr (getRank() == 6) {
       // return a subview of rank 5
-      return Kokkos::subview(mData, index, Kokkos::ALL, Kokkos::ALL,
-                             Kokkos::ALL, Kokkos::ALL, Kokkos::ALL);
+      return Kokkos::subview(mData, index, ALL, ALL, ALL, ALL, ALL);
     } else if constexpr (getRank() == 5) {
       // return a subview of rank 4
-      return Kokkos::subview(mData, index, Kokkos::ALL, Kokkos::ALL,
-                             Kokkos::ALL, Kokkos::ALL);
+      return Kokkos::subview(mData, index, ALL, ALL, ALL, ALL);
     } else if constexpr (getRank() == 4) {
       // return a subview of rank 3
-      return Kokkos::subview(mData, index, Kokkos::ALL, Kokkos::ALL,
-                             Kokkos::ALL);
+      return Kokkos::subview(mData, index, ALL, ALL, ALL);
     } else if constexpr (getRank() == 3) {
       // return a subview of rank 2
-      return Kokkos::subview(mData, index, Kokkos::ALL, Kokkos::ALL);
+      return Kokkos::subview(mData, index, ALL, ALL);
     } else if constexpr (getRank() == 2) {
       // return a subview of rank 1
-      return Kokkos::subview(mData, index, Kokkos::ALL);
+      return Kokkos::subview(mData, index, ALL);
     }
   }
 };
