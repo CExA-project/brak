@@ -13,3 +13,19 @@ target_link_libraries(
 if(BRAK_ENABLE_GTEST_DISCOVER_TESTS)
     gtest_discover_tests(test-subview)
 endif()
+
+add_executable(
+    test-compute
+    main.cpp
+    test_compute.cpp
+)
+
+target_link_libraries(
+    test-compute
+    Brak::brak
+    GTest::gtest
+)
+
+if(BRAK_ENABLE_GTEST_DISCOVER_TESTS)
+    gtest_discover_tests(test-compute)
+endif()
