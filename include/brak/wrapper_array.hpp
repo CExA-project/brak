@@ -1,5 +1,5 @@
-#ifndef __BRAK_COMPUTE_HPP__
-#define __BRAK_COMPUTE_HPP__
+#ifndef __BRAK_WRAPPER_ARRAY_HPP__
+#define __BRAK_WRAPPER_ARRAY_HPP__
 
 #include <type_traits>
 
@@ -8,13 +8,13 @@
 namespace brak {
 
 /**
- * Wrapper based on storage of indices.
+ * Wrapper based on an array of indices.
  */
-template <typename View, std::size_t depth = 0> class BracketsWrapperCompute {
+template <typename View, std::size_t depth = 0> class WrapperArray {
   /**
    * Marker to identify the class.
    */
-  using BracketsWrapperComputeType = BracketsWrapperCompute<View>;
+  using WrapperArrayType = WrapperArray<View>;
 
   /**
    * Wrapped view.
@@ -33,7 +33,7 @@ public:
    * @tparam depth Current depth of the wrapper.
    * @param data Input view.
    */
-  BracketsWrapperCompute(View const data) : mData(data) {}
+  WrapperArray(View const data) : mData(data) {}
 
   /**
    * Construct a sub-wrapper from a view and a list of indices.
@@ -42,8 +42,8 @@ public:
    * @param data Input view.
    * @param indices List of indices above the sub-wrapper.
    */
-  BracketsWrapperCompute(View const data,
-                         Kokkos::Array<std::size_t, depth> const &indices)
+  WrapperArray(View const data,
+               Kokkos::Array<std::size_t, depth> const &indices)
       : mData(data), mIndices(indices) {}
 
   /**
@@ -73,7 +73,7 @@ public:
     indices[depth] = index;
 
     if constexpr (getRank() > 1) {
-      return BracketsWrapperCompute<View, depth + 1>(mData, indices);
+      return WrapperArray<View, depth + 1>(mData, indices);
     } else {
       return getValue(indices);
     }
@@ -127,4 +127,4 @@ private:
 
 } // namespace brak
 
-#endif // ifndef __BRAK_COMPUTE_HPP__
+#endif // ifndef __BRAK_WRAPPER_ARRAY_HPP__

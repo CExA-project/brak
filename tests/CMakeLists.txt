@@ -1,31 +1,31 @@
 add_executable(
-    test-subview
+    test-wrapper-subview
     main.cpp
-    test_subview.cpp
+    test_wrapper_subview.cpp
 )
 
 target_link_libraries(
-    test-subview
+    test-wrapper-subview
     Brak::brak
     GTest::gtest
 )
 
 if(BRAK_ENABLE_GTEST_DISCOVER_TESTS)
-    gtest_discover_tests(test-subview)
+    gtest_discover_tests(test-wrapper-subview)
 endif()
 
 add_executable(
-    test-compute
+    test-wrapper-array
     main.cpp
-    test_compute.cpp
+    test_wrapper_array.cpp
 )
 
 target_link_libraries(
-    test-compute
+    test-wrapper-array
     Brak::brak
     GTest::gtest
 )
 
 if(BRAK_ENABLE_GTEST_DISCOVER_TESTS)
-    gtest_discover_tests(test-compute)
+    gtest_discover_tests(test-wrapper-array)
 endif()

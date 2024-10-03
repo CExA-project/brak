@@ -1,5 +1,5 @@
-#ifndef __BRAK_SUBVIEW_HPP__
-#define __BRAK_SUBVIEW_HPP__
+#ifndef __BRAK_WRAPPER_SUBVIEW_HPP__
+#define __BRAK_WRAPPER_SUBVIEW_HPP__
 
 #include <type_traits>
 
@@ -12,11 +12,11 @@ namespace brak {
  */
 template <typename View,
           typename Enabled = std::enable_if<Kokkos::is_view<View>::value>>
-class BracketsWrapperSubview {
+class WrapperSubview {
   /**
    * Marker to identify the class.
    */
-  using BracketsWrapperSubviewType = BracketsWrapperSubview<View>;
+  using WrapperSubviewType = WrapperSubview<View>;
 
   /**
    * Wrapped view.
@@ -30,7 +30,7 @@ public:
    * @tparam View Type of the input view.
    * @param data Input view.
    */
-  explicit BracketsWrapperSubview(View const data) : mData(data) {}
+  explicit WrapperSubview(View const data) : mData(data) {}
 
   /**
    * Get the rank of the wrapped view.
@@ -51,7 +51,7 @@ public:
     if constexpr (getRank() > 1) {
       // return wrapper of the subview
       auto subview = getSubview(index);
-      return BracketsWrapperSubview<decltype(subview)>(subview);
+      return WrapperSubview<decltype(subview)>(subview);
       // NOTE The manual passing of the subview type is necessary for NVCC that
       // doesn't do CTAD. (Instead, one would just have used `brak::` to call
       // the template class and not the current one.)
@@ -119,4 +119,4 @@ private:
 
 } // namespace brak
 
-#endif // ifndef __BRAK_SUBVIEW_HPP__
+#endif // ifndef __BRAK_WRAPPER_SUBVIEW_HPP__

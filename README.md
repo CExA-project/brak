@@ -100,15 +100,15 @@ If the number of pair of brackets is the same as the rank of the view, then the 
 
 ```cpp
 #include <Kokkos_Core.hpp>
-#include "brak/subview.hpp"
+#include "brak/wrapper_subview.hpp"
 // or
-#include "brak/compute.hpp"
+#include "brak/wrapper_array.hpp"
 
 void doSomething() {
   Kokkos::View<int ********> data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
-  brak::BracketsWrapperSubview dataWrapper{data};
+  brak::WrapperSubview dataWrapper{data};
   // or
-  brak::BracketsWrapperCompute dataWrapper{data};
+  brak::WrapperArray dataWrapper{data};
 
   dataWrapper[0][0][0][0][0][0][0] = 10;
 }
@@ -123,9 +123,9 @@ With this approach, the class `brak::BracketsWrapperSubview` wraps a view, and e
 This approach is very inefficient in terms of performance at compile time and at runtime, due to the extra overhead.
 For a view of rank 8, the build is 22 % slower than using the parenthesis operator directly, and the execution is 180 times slower.
 
-### Compute wrapper approach
+### Array wrapper approach
 
-With this different approach, the class `brak::BracketsWrapperCompute` wraps a view, and each call to the brackets operator gives a sub-wrapper that also stores the list of the requested indices.
+With this different approach, the class `brak::BracketsWrapperCompute` wraps a view, and each call to the brackets operator gives a sub-wrapper that also stores an array of the requested indices.
 
 This approach is a bit less inefficient than the subview approach.
 For a view of rank 8, the build is 3 % slower than using the parenthesis operator directly, and the execution is 120 times slower.
