@@ -123,6 +123,8 @@ With this approach, the class `brak::BracketsWrapperSubview` wraps a view, and e
 This approach is very inefficient in terms of performance at compile time and at runtime, due to the extra overhead.
 For a view of rank 8, the build is 22 % slower than using the parenthesis operator directly, and the execution is 180 times slower.
 
+This approach cannot be used on GPU.
+
 ### Array wrapper approach
 
 With this different approach, the class `brak::BracketsWrapperCompute` wraps a view, and each call to the brackets operator gives a sub-wrapper that also stores an array of the requested indices.

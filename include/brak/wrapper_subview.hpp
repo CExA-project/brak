@@ -110,7 +110,7 @@ private:
     } else if constexpr (getRank() == 3) {
       // return a subview of rank 2
       return Kokkos::subview(mData, index, ALL, ALL);
-    } else if constexpr (getRank() == 2) {
+    } else {
       // return a subview of rank 1
       return Kokkos::subview(mData, index, ALL);
     }

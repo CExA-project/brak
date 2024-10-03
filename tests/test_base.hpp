@@ -113,6 +113,7 @@ template <typename Wrapper> struct TestFunctor {
 
   TestFunctor(Wrapper const wrapper) : mWrapper(wrapper) {}
 
+  KOKKOS_FUNCTION
   void operator()(int const i, int const j, int const k, int const l,
                   int const m, int const n) const {
     mWrapper[i][j][k][l][m][n] = i + j + k + l + m + n;
@@ -124,13 +125,16 @@ TEST(GET_TEST_NAME_INTEGRATION(WRAPPER_NAME), test_access_parallel_for) {
       data{"data", 2, 2, 2, 2, 2, 2};
   WRAPPER_CLASS dataWrapper{data};
 
-  Kokkos::parallel_for(
-      "test_access_parallel_for",
-      Kokkos::MDRangePolicy({0, 0, 0, 0, 0, 0}, {2, 2, 2, 2, 2, 2}),
-      TestFunctor(dataWrapper));
+  Kokkos::parallel_for("test_access_parallel_for",
+                       Kokkos::MDRangePolicy(Kokkos::DefaultHostExecutionSpace(),
+                                             {0, 0, 0, 0, 0, 0},
+                                             {2, 2, 2, 2, 2, 2}),
+                       TestFunctor(dataWrapper));
 
   ASSERT_EQ(data(1, 1, 1, 1, 1, 1), 6);
 }
+
+#ifndef DISABLE_TEST_DEVICE
 
 TEST(GET_TEST_NAME_INTEGRATION(WRAPPER_NAME), test_access_parallel_for_device) {
   Kokkos::View<int ******> data{"data", 2, 2, 2, 2, 2, 2};
@@ -146,3 +150,5 @@ TEST(GET_TEST_NAME_INTEGRATION(WRAPPER_NAME), test_access_parallel_for_device) {
 
   ASSERT_EQ(dataMirror(1, 1, 1, 1, 1, 1), 6);
 }
+
+#endif // ifndef DISABLE_TEST_DEVICE
