@@ -1,11 +1,11 @@
 add_executable(
-    benchmark-subview
-    benchmark_subview.cpp
+    benchmark-brak
+    benchmark.cpp
     main.cpp
 )
 
 target_link_libraries(
-    benchmark-subview
+    benchmark-brak
     benchmark::benchmark
     Brak::brak
 )
