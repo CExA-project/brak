@@ -39,7 +39,7 @@ public:
   static std::size_t constexpr getRank() { return View::rank(); }
 
   /**
-   * Create a wrapped subview with a rank lowered to 1.
+   * Create a wrapped subview with a rank lowered by 1.
    * @param index Left-most index to extract from the wrapped view.
    * @return A wrapped subview or a reference to a scalar if the wrapped view
    * has a dimension of 1.
@@ -90,7 +90,7 @@ private:
     // NOTE It's probably possible to write templated code to not handle all
     // the dimensions manually, but it's a lot of troubles for 8 dimensions.
 
-    auto& ALL = Kokkos::ALL;
+    auto &ALL = Kokkos::ALL;
 
     if constexpr (getRank() == 8) {
       // return a subview of rank 7
