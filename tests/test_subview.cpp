@@ -79,3 +79,20 @@ TEST(test_brackets_wrapper_subview, test_get_view) {
   static_assert(std::is_same_v<decltype(data), decltype(dataView)>);
   ASSERT_EQ(data.data(), dataView.data());
 }
+
+TEST(test_brackets_wrapper_subview_integration, test_access) {
+  Kokkos::View<int ******, Kokkos::DefaultHostExecutionSpace::memory_space>
+      data{"data", 2, 2, 2, 2, 2, 2};
+  brak::BracketsWrapperSubview dataWrapper{data};
+
+  for (std::size_t i = 0; i < 2; i++)
+    for (std::size_t j = 0; j < 2; j++)
+      for (std::size_t k = 0; k < 2; k++)
+        for (std::size_t l = 0; l < 2; l++)
+          for (std::size_t m = 0; m < 2; m++)
+            for (std::size_t n = 0; n < 2; n++) {
+              dataWrapper[i][j][k][l][m][n] = i + j + k + l + m + n;
+            }
+
+  ASSERT_EQ(data(1, 1, 1, 1, 1, 1), 6);
+}
