@@ -32,5 +32,10 @@ if(BRAK_ENABLE_BENCHMARKS)
             URL https://github.com/google/benchmark/archive/refs/tags/v1.9.0.tar.gz
         )
         FetchContent_MakeAvailable(googlebenchmark)
+
+        # override configuration
+        set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "" FORCE)
+        set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
+        set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
     endif()
 endif()
