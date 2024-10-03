@@ -80,7 +80,7 @@ TEST(test_brackets_wrapper_subview, test_get_view) {
   ASSERT_EQ(data.data(), dataView.data());
 }
 
-TEST(test_brackets_wrapper_subview_integration, test_access) {
+TEST(test_brackets_wrapper_subview_integration, test_access_for) {
   Kokkos::View<int ******, Kokkos::DefaultHostExecutionSpace::memory_space>
       data{"data", 2, 2, 2, 2, 2, 2};
   brak::BracketsWrapperSubview dataWrapper{data};
@@ -95,4 +95,44 @@ TEST(test_brackets_wrapper_subview_integration, test_access) {
             }
 
   ASSERT_EQ(data(1, 1, 1, 1, 1, 1), 6);
+}
+
+template <typename Wrapper> struct TestFunctor {
+  Wrapper mWrapper;
+
+  TestFunctor(Wrapper const wrapper) : mWrapper(wrapper) {}
+
+  void operator()(int const i, int const j, int const k, int const l,
+                  int const m, int const n) const {
+    mWrapper[i][j][k][l][m][n] = i + j + k + l + m + n;
+  }
+};
+
+TEST(test_brackets_wrapper_subview_integration, test_access_parallel_for) {
+  Kokkos::View<int ******, Kokkos::DefaultHostExecutionSpace::memory_space>
+      data{"data", 2, 2, 2, 2, 2, 2};
+  brak::BracketsWrapperSubview dataWrapper{data};
+
+  Kokkos::parallel_for(
+      "test_access_parallel_for",
+      Kokkos::MDRangePolicy({0, 0, 0, 0, 0, 0}, {2, 2, 2, 2, 2, 2}),
+      TestFunctor(dataWrapper));
+
+  ASSERT_EQ(data(1, 1, 1, 1, 1, 1), 6);
+}
+
+TEST(test_brackets_wrapper_subview_integration,
+     test_access_parallel_for_device) {
+  Kokkos::View<int ******> data{"data", 2, 2, 2, 2, 2, 2};
+  auto dataMirror = Kokkos::create_mirror_view(data);
+  brak::BracketsWrapperSubview dataWrapper{data};
+
+  Kokkos::parallel_for(
+      "test_access_parallel_for",
+      Kokkos::MDRangePolicy({0, 0, 0, 0, 0, 0}, {2, 2, 2, 2, 2, 2}),
+      TestFunctor(dataWrapper));
+
+  Kokkos::deep_copy(dataMirror, data);
+
+  ASSERT_EQ(dataMirror(1, 1, 1, 1, 1, 1), 6);
 }

@@ -44,7 +44,7 @@ public:
    * @return A wrapped subview or a reference to a scalar if the wrapped view
    * has a dimension of 1.
    */
-  decltype(auto) operator[](std::size_t const index) {
+  decltype(auto) operator[](std::size_t const index) const {
     // NOTE The `decltype(auto)` allows to return either a value (a new instance
     // of the class) or a reference to a value (a scalar).
 
@@ -83,7 +83,7 @@ private:
    * @note Can only be used when the rank of the wrapped view is between 2
    * and 8.
    */
-  auto getSubview(std::size_t const index) {
+  auto getSubview(std::size_t const index) const {
     static_assert(getRank() <= 8, "Rank of view too large");
     static_assert(getRank() > 1, "Rank of view too small");
 
