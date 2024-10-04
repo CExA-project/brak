@@ -54,10 +54,21 @@ public:
     if constexpr (getRank() > 1) {
       // return wrapper of the subview
       auto subview = getSubview(index);
-      return WrapperSubview<decltype(subview)>(subview);
-      // NOTE The manual passing of the subview type is necessary for NVCC that
-      // doesn't do CTAD. (Instead, one would just have used `brak::` to call
-      // the template class and not the current one.)
+      using ViewCurrent = decltype(subview);
+
+      // make the view unmanaged at its first access
+      using ViewNext = std::conditional_t<
+          ViewCurrent::traits::memory_traits::is_unmanaged, ViewCurrent,
+          Kokkos::View<typename ViewCurrent::traits::data_type,
+                       typename ViewCurrent::traits::array_layout,
+                       typename ViewCurrent::traits::device_type,
+                       typename ViewCurrent::traits::hooks_policy,
+                       Kokkos::MemoryTraits<Kokkos::Unmanaged>>>;
+      // NOTE This disables reference counting on CPU for each view created in
+      // each successive wrapper retrieved, which greatly improves performance.
+      // On GPU, reference counting of views is already disabled by default.
+
+      return WrapperSubview<ViewNext>(subview);
     } else {
       // return a reference to a scalar
       return mData(index);

@@ -82,7 +82,19 @@ public:
     indices[depth] = index;
 
     if constexpr (getRank() > 1) {
-      return WrapperArray<View, depth + 1>(mData, indices);
+      // make the view unmanaged at its first access
+      using ViewNext = std::conditional_t<
+          View::traits::memory_traits::is_unmanaged, View,
+          Kokkos::View<typename View::traits::data_type,
+                       typename View::traits::array_layout,
+                       typename View::traits::device_type,
+                       typename View::traits::hooks_policy,
+                       Kokkos::MemoryTraits<Kokkos::Unmanaged>>>;
+      // NOTE This disables reference counting on CPU for each view created in
+      // each successive wrapper retrieved, which greatly improves performance.
+      // On GPU, reference counting of views is already disabled by default.
+
+      return WrapperArray<ViewNext, depth + 1>(mData, indices);
     } else {
       return getValue(indices);
     }
