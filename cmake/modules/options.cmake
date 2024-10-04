@@ -9,3 +9,6 @@ option(BRAK_ENABLE_GTEST_DISCOVER_TESTS "Enable Gtest to discover tests by attem
 
 # benchmarks
 option(BRAK_ENABLE_BENCHMARKS "Build benchmarks of the library")
+
+# compile benchmarks
+option(BRAK_ENABLE_COMPILE_BENCHMARKS "Build compile benchmarks of the library")
