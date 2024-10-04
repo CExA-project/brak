@@ -10,11 +10,13 @@ namespace brak {
 /**
  * Wrapper based on an array of indices.
  */
-template <typename View, std::size_t depth = 0> class WrapperArray {
+template <typename View, std::size_t depth = 0,
+          typename Enabled = std::enable_if<Kokkos::is_view<View>::value>>
+class WrapperArray {
   /**
    * Marker to identify the class.
    */
-  using WrapperArrayType = WrapperArray<View>;
+  using WrapperArrayType = WrapperArray<View, depth>;
 
   /**
    * Wrapped view.
@@ -34,7 +36,7 @@ public:
    * @param data Input view.
    */
   KOKKOS_FUNCTION
-  WrapperArray(View const data) : mData(data) {}
+  explicit WrapperArray(View const data) : mData(data) {}
 
   /**
    * Construct a sub-wrapper from a view and a list of indices.
