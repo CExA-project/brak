@@ -30,12 +30,14 @@ public:
    * @tparam View Type of the input view.
    * @param data Input view.
    */
+  KOKKOS_FUNCTION
   explicit WrapperSubview(View const data) : mData(data) {}
 
   /**
    * Get the rank of the wrapped view.
    * @return Rank of the wrapped view.
    */
+  KOKKOS_FUNCTION
   static std::size_t constexpr getRank() { return View::rank(); }
 
   /**
@@ -44,6 +46,7 @@ public:
    * @return A wrapped subview or a reference to a scalar if the wrapped view
    * has a dimension of 1.
    */
+  KOKKOS_FUNCTION
   decltype(auto) operator[](std::size_t const index) const {
     // NOTE The `decltype(auto)` allows to return either a value (a new instance
     // of the class) or a reference to a value (a scalar).
@@ -67,12 +70,14 @@ public:
    * @note This method may give access to data that are not contiguous in
    * memory and lead to unpredictible behaviors.
    */
+  KOKKOS_FUNCTION
   typename View::value_type *operator*() { return mData.data(); }
 
   /**
    * Retrieve the wrapped view.
    * @return Copy of the wrapped view.
    */
+  KOKKOS_FUNCTION
   View getView() { return mData; }
 
 private:
@@ -83,6 +88,7 @@ private:
    * @note Can only be used when the rank of the wrapped view is between 2
    * and 8.
    */
+  KOKKOS_FUNCTION
   auto getSubview(std::size_t const index) const {
     static_assert(getRank() <= 8, "Rank of view too large");
     static_assert(getRank() > 1, "Rank of view too small");
@@ -91,7 +97,7 @@ private:
     // the dimensions manually, but it's a lot of troubles for just 8
     // dimensions.
 
-    auto &ALL = Kokkos::ALL;
+    using Kokkos::ALL;
 
     if constexpr (getRank() == 8) {
       // return a subview of rank 7
