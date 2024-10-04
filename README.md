@@ -119,13 +119,52 @@ To achieve this, two implementations are proposed (they share the same API).
 ### Subview wrapper approach
 
 With this approach, the class `brak::WrapperSubview` wraps a view, and each call to the brackets operator gives a new instance of the class wrapping a subview.
+The subview is unmanaged, in order to disable reference counting and increase performance.
 
-This approach is very inefficient in terms of performance at compile time and at runtime, due to the extra overhead.
-For a view of rank 8 on CPU, the build is 22 % slower than using the parenthesis operator directly, and the execution is 180 times slower.
+This approach is less inefficient in terms of performance at compile time and at runtime, due to the extra overhead.
 
 ### Array wrapper approach
 
 With this different approach, the class `brak::WrapperArray` wraps a view, and each call to the brackets operator gives a sub-wrapper that also stores an array of the requested indices.
+The subsequent wrapper contains an unmanaged version of the initial view, in order to disable reference counting and increase performance.
 
-This approach is a bit less inefficient than the subview wrapper approach.
-For a view of rank 8 on CPU, the build is 3 % slower than using the parenthesis operator directly, and the execution is 120 times slower.
+This approach is more inefficient than the subview wrapper approach.
+
+## Performance
+
+Benchmarks done using an Intel Core i7-13800H and a NVIDIA A500 GPU, all times in seconds.
+
+| Implementation  | Build CPU             | Access CPU              | Parallel-for CPU serial | Parallel-for CPU parallel | Parallel-for GPU       |
+|-----------------|-----------------------|-------------------------|-------------------------|---------------------------|------------------------|
+| Wrapper subview | 968 × 10<sup>-3</sup> | 10.4 × 10<sup>-9</sup>  | 711 × 10<sup>-3</sup>   | 252 × 10<sup>-3</sup>     | 97.7 × 10<sup>-3</sup> |
+| Wrapper array   | 800 × 10<sup>-3</sup> | 0.406 × 10<sup>-9</sup> | 446 × 10<sup>-3</sup>   | 230 × 10<sup>-3</sup>     | 92.7 × 10<sup>-3</sup> |
+| Reference view  | 771 × 10<sup>-3</sup> | 1.20 × 10<sup>-9</sup>  | 438 × 10<sup>-3</sup>   | 245 × 10<sup>-3</sup>     | 87.5 × 10<sup>-3</sup> |
+
+Benchmarks are detailed in the next sections.
+
+In terms of compilation time, the subview wrapper approach takes 25 % more time than a reference view, and the array approach 4 %.
+
+When accessing a single element, a subview wrapper is 8.7 times slower than a view, and an array wrapper is 3 times faster.
+The later is due to reference counting being disabled for wrappers.
+Though using it, the subview wrapper does not benefit of it much, but the same order of magnitude of execution time can be obtained if the initial view is already unmanaged.
+
+For a more realistic access of elements, a subview wrapper is 62 % times slower than a view for CPU serial execution.
+It is 3 % slower, respectively 12 % slower, for CPU parallel execution, respectively GPU execution, meaning that parallel execution tends to lower the difference.
+An array wrapper is 2 % slower, respectively 6 % faster and 6 % slower, for CPU serial execution, respectively CPU parallel execution and GPU execution, which shows that this implementation has a limited impact on performance.
+
+### Build benchmark details
+
+This [compile benchmark](./compile_benchmarks) consists in compiling in debug mode a function that creates a view of rank 8 of dimension 2 × 2 × 2 × 2 × 2 × 2 × 2 × 2 (256 elements) containing 4 bits integers (1.024 kB) and that accesses and sets its element 1, 1, 1, 1, 1, 1, 1, 1 to 10.
+
+### Access benchmark details
+
+This [benchmark](./benchmarks/benchmark_access.cpp) uses a view of rank 8 of dimension 2 × 2 × 2 × 2 × 2 × 2 × 2 × 2 (256 elements) containing 4 bits integers (1.024 kB). 
+It consists in measuring the time to access and set the element 1, 1, 1, 1, 1, 1, 1, 1 to 10.
+
+### Parallel-for benchmark details
+
+This [benchmark](./benchmarks/benchmark_parallel_for.cpp) uses a view of rank 6 of dimension 30 × 30 × 30 × 30 × 30 × 30 (729 × 10<sup>6</sup> elements) containing 4 bits integers (2.916 GB).
+It consists in measuring the time for a Kokkos `parallel_for` loop to fill all the elements of the view with the sum of their coordinates.
+The time spent in launching the kernel is counterbalanced by the large size of the view.
+
+CPU serial execution was performed with the serial backend, CPU parallel execution with the OpenMP backend, and GPU execution with the Cuda backend.
