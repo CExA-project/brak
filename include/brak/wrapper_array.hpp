@@ -9,9 +9,10 @@ namespace brak {
 
 /**
  * Wrapper based on an array of indices.
+ * @tparam View Type of the input view.
+ * @tparam depth Current depth of the wrapper.
  */
-template <typename View, std::size_t depth = 0>
-class WrapperArray {
+template <typename View, std::size_t depth = 0> class WrapperArray {
   /**
    * Marker to identify the class.
    */
@@ -31,8 +32,6 @@ class WrapperArray {
 public:
   /**
    * Construct a wrapper from a view.
-   * @tparam View Type of the input view.
-   * @tparam depth Current depth of the wrapper.
    * @param data Input view.
    */
   KOKKOS_FUNCTION
@@ -40,8 +39,6 @@ public:
 
   /**
    * Construct a sub-wrapper from a view and a list of indices.
-   * @tparam View Type of the input view.
-   * @tparam depth Current depth of the wrapper.
    * @param data Input view.
    * @param indices List of indices above the sub-wrapper.
    */

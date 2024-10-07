@@ -9,9 +9,9 @@ namespace brak {
 
 /**
  * Wrapper based on subviews.
+ * @tparam View Type of the input view.
  */
 template <typename View> class WrapperSubview {
-
   /**
    * Marker to identify the class.
    */
@@ -27,7 +27,6 @@ template <typename View> class WrapperSubview {
 public:
   /**
    * Construct a wrapper from a view.
-   * @tparam View Type of the input view.
    * @param data Input view.
    */
   KOKKOS_FUNCTION
