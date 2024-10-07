@@ -10,9 +10,8 @@ namespace brak {
 /**
  * Wrapper based on subviews.
  */
-template <typename View,
-          typename Enabled = std::enable_if<Kokkos::is_view<View>::value>>
-class WrapperSubview {
+template <typename View> class WrapperSubview {
+
   /**
    * Marker to identify the class.
    */
@@ -23,6 +22,7 @@ class WrapperSubview {
    * We use the fact that a subview is actually a view.
    */
   View mData;
+  static_assert(Kokkos::is_view<View>::value);
 
 public:
   /**

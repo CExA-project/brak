@@ -10,8 +10,7 @@ namespace brak {
 /**
  * Wrapper based on an array of indices.
  */
-template <typename View, std::size_t depth = 0,
-          typename Enabled = std::enable_if<Kokkos::is_view<View>::value>>
+template <typename View, std::size_t depth = 0>
 class WrapperArray {
   /**
    * Marker to identify the class.
@@ -22,6 +21,7 @@ class WrapperArray {
    * Wrapped view.
    */
   View mData;
+  static_assert(Kokkos::is_view<View>::value);
 
   /**
    * Array of the indices.
