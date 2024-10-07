@@ -134,11 +134,11 @@ This approach is more inefficient than the subview wrapper approach.
 
 Benchmarks done using an Intel Core i7-13800H and a NVIDIA A500 GPU, all times in seconds.
 
-| Implementation  | Build CPU             | Access CPU              | Parallel-for CPU serial | Parallel-for CPU parallel | Parallel-for GPU       |
-|-----------------|-----------------------|-------------------------|-------------------------|---------------------------|------------------------|
-| Wrapper subview | 968 × 10<sup>-3</sup> | 10.4 × 10<sup>-9</sup>  | 711 × 10<sup>-3</sup>   | 252 × 10<sup>-3</sup>     | 97.7 × 10<sup>-3</sup> |
-| Wrapper array   | 800 × 10<sup>-3</sup> | 0.406 × 10<sup>-9</sup> | 446 × 10<sup>-3</sup>   | 230 × 10<sup>-3</sup>     | 92.7 × 10<sup>-3</sup> |
-| Reference view  | 771 × 10<sup>-3</sup> | 1.20 × 10<sup>-9</sup>  | 438 × 10<sup>-3</sup>   | 245 × 10<sup>-3</sup>     | 87.5 × 10<sup>-3</sup> |
+| Implementation  | Build Serial          | Access Serial           | Parallel-for Serial   | Parallel-for CPU OpenMP | Parallel-for Cuda      |
+|-----------------|-----------------------|-------------------------|-----------------------|-------------------------|------------------------|
+| Wrapper subview | 968 × 10<sup>-3</sup> | 10.4 × 10<sup>-9</sup>  | 711 × 10<sup>-3</sup> | 252 × 10<sup>-3</sup>   | 97.7 × 10<sup>-3</sup> |
+| Wrapper array   | 800 × 10<sup>-3</sup> | 0.406 × 10<sup>-9</sup> | 446 × 10<sup>-3</sup> | 230 × 10<sup>-3</sup>   | 92.7 × 10<sup>-3</sup> |
+| Reference view  | 771 × 10<sup>-3</sup> | 1.20 × 10<sup>-9</sup>  | 438 × 10<sup>-3</sup> | 245 × 10<sup>-3</sup>   | 87.5 × 10<sup>-3</sup> |
 
 Benchmarks are detailed in the next sections.
 
@@ -166,5 +166,3 @@ It consists in measuring the time to access and set the element 1, 1, 1, 1, 1, 1
 This [benchmark](./benchmarks/benchmark_parallel_for.cpp) uses a view of rank 6 of dimension 30 × 30 × 30 × 30 × 30 × 30 (729 × 10<sup>6</sup> elements) containing 4 bits integers (2.916 GB).
 It consists in measuring the time for a Kokkos `parallel_for` loop to fill all the elements of the view with the sum of their coordinates.
 The time spent in launching the kernel is counterbalanced by the large size of the view.
-
-CPU serial execution was performed with the serial backend, CPU parallel execution with the OpenMP backend, and GPU execution with the Cuda backend.
