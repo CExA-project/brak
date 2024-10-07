@@ -102,10 +102,11 @@ TEST(GET_TEST_NAME_INTEGRATION(WRAPPER_NAME), test_access_for) {
         for (std::size_t l = 0; l < 2; l++)
           for (std::size_t m = 0; m < 2; m++)
             for (std::size_t n = 0; n < 2; n++) {
-              dataWrapper[i][j][k][l][m][n] = i + j + k + l + m + n;
+              dataWrapper[i][j][k][l][m][n] =
+                  i + j * 2 + k * 3 + l * 4 + m * 5 + n * 6;
             }
 
-  ASSERT_EQ(data(1, 1, 1, 1, 1, 1), 6);
+  ASSERT_EQ(data(0, 1, 0, 1, 0, 1), 12);
 }
 
 template <typename Wrapper> struct TestFunctor {
@@ -114,9 +115,10 @@ template <typename Wrapper> struct TestFunctor {
   TestFunctor(Wrapper const wrapper) : mWrapper(wrapper) {}
 
   KOKKOS_FUNCTION
-  void operator()(int const i, int const j, int const k, int const l,
-                  int const m, int const n) const {
-    mWrapper[i][j][k][l][m][n] = i + j + k + l + m + n;
+  void operator()(std::size_t const i, std::size_t const j, std::size_t const k,
+                  std::size_t const l, std::size_t const m,
+                  std::size_t const n) const {
+    mWrapper[i][j][k][l][m][n] = i + j * 2 + k * 3 + l * 4 + m * 5 + n * 6;
   }
 };
 
@@ -125,13 +127,13 @@ TEST(GET_TEST_NAME_INTEGRATION(WRAPPER_NAME), test_access_parallel_for) {
       data{"data", 2, 2, 2, 2, 2, 2};
   WRAPPER_CLASS dataWrapper{data};
 
-  Kokkos::parallel_for("test_access_parallel_for",
-                       Kokkos::MDRangePolicy(Kokkos::DefaultHostExecutionSpace(),
-                                             {0, 0, 0, 0, 0, 0},
-                                             {2, 2, 2, 2, 2, 2}),
-                       TestFunctor(dataWrapper));
+  Kokkos::parallel_for(
+      "test_access_parallel_for",
+      Kokkos::MDRangePolicy(Kokkos::DefaultHostExecutionSpace(),
+                            {0, 0, 0, 0, 0, 0}, {2, 2, 2, 2, 2, 2}),
+      TestFunctor(dataWrapper));
 
-  ASSERT_EQ(data(1, 1, 1, 1, 1, 1), 6);
+  ASSERT_EQ(data(0, 1, 0, 1, 0, 1), 12);
 }
 
 #ifndef DISABLE_TEST_DEVICE
@@ -148,7 +150,7 @@ TEST(GET_TEST_NAME_INTEGRATION(WRAPPER_NAME), test_access_parallel_for_device) {
 
   Kokkos::deep_copy(dataMirror, data);
 
-  ASSERT_EQ(dataMirror(1, 1, 1, 1, 1, 1), 6);
+  ASSERT_EQ(dataMirror(0, 1, 0, 1, 0, 1), 12);
 }
 
 #endif // ifndef DISABLE_TEST_DEVICE
