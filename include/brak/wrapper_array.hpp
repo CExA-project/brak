@@ -82,6 +82,7 @@ public:
     indices[depth] = index;
 
     if constexpr (getRank() > 1) {
+      // return wrapper of the view with a new array of indices
       // make the view unmanaged at its first access
       using ViewNext = std::conditional_t<
           View::traits::memory_traits::is_unmanaged, View,
@@ -96,6 +97,7 @@ public:
 
       return WrapperArray<ViewNext, depth + 1>(mData, indices);
     } else {
+      // return a reference to a scalar
       return getValue(indices);
     }
   }
