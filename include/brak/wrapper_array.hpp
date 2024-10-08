@@ -2,6 +2,7 @@
 #define __BRAK_WRAPPER_ARRAY_HPP__
 
 #include <type_traits>
+#include <utility>
 
 #include <Kokkos_Core.hpp>
 
@@ -117,40 +118,31 @@ public:
 
 private:
   /**
-   * Get the scalar value of the wrapped view.
+   * Get the scalar value of the wrapped view from a list of indices.
    * @param indices List of indices above the sub-wrapper.
    * @return Scalar value of the view.
-   * @note Can only be used when the rank of the wrapped view is between 1
-   * and 8.
    */
   KOKKOS_FUNCTION
   auto &getValue(Kokkos::Array<std::size_t, depth + 1> const &indices) const {
-    static_assert(getRankSource() <= 8, "Rank of view too large");
-    static_assert(getRankSource() > 0, "Rank of view too small");
+    return getValue(indices,
+                    std::make_integer_sequence<std::size_t, depth + 1>());
+  }
 
-    // NOTE It's probably possible to write templated code to not handle all
-    // the dimensions manually, but it's a lot of troubles for just 8
-    // dimensions.
-
-    auto &i = indices;
-
-    if constexpr (getRankSource() == 8) {
-      return mData(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
-    } else if constexpr (getRankSource() == 7) {
-      return mData(i[0], i[1], i[2], i[3], i[4], i[5], i[6]);
-    } else if constexpr (getRankSource() == 6) {
-      return mData(i[0], i[1], i[2], i[3], i[4], i[5]);
-    } else if constexpr (getRankSource() == 5) {
-      return mData(i[0], i[1], i[2], i[3], i[4]);
-    } else if constexpr (getRankSource() == 4) {
-      return mData(i[0], i[1], i[2], i[3]);
-    } else if constexpr (getRankSource() == 3) {
-      return mData(i[0], i[1], i[2]);
-    } else if constexpr (getRankSource() == 2) {
-      return mData(i[0], i[1]);
-    } else {
-      return mData(i[0]);
-    }
+  /**
+   * Get the scalar value of the wrapped view from a list of indices and integer
+   * sequence.
+   * @tparam args Integer sequence.
+   * @param indices List of indices above the sub-wrapper.
+   * @param argsSequence Integer sequence of the indices from 0 to `depth` to
+   * access `indices`.
+   * @return Scalar value of the view.
+   */
+  template <std::size_t... args>
+  KOKKOS_FUNCTION
+  auto &getValue(Kokkos::Array<std::size_t, depth + 1> const &indices,
+                 [[maybe_unused]] std::integer_sequence<std::size_t, args...>
+                     argsSequence) const {
+    return mData(indices[args]...);
   }
 };
 
