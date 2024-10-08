@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
 project(
-    BracketsAdapterKokkos
+    BracketsWrapperKokkos
     LANGUAGES CXX
     VERSION 0.0.0
 )
