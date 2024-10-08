@@ -134,11 +134,11 @@ This approach is more inefficient than the subview wrapper approach.
 
 Benchmarks done using an Intel Core i7-13800H and a NVIDIA A500 GPU, all times in seconds.
 
-| Implementation  | Build Serial          | Access Serial           | Parallel-for Serial   | Parallel-for CPU OpenMP | Parallel-for Cuda      |
-|-----------------|-----------------------|-------------------------|-----------------------|-------------------------|------------------------|
-| Wrapper subview | 968 × 10<sup>-3</sup> | 10.4 × 10<sup>-9</sup>  | 711 × 10<sup>-3</sup> | 252 × 10<sup>-3</sup>   | 97.7 × 10<sup>-3</sup> |
-| Wrapper array   | 800 × 10<sup>-3</sup> | 0.406 × 10<sup>-9</sup> | 446 × 10<sup>-3</sup> | 230 × 10<sup>-3</sup>   | 92.7 × 10<sup>-3</sup> |
-| Reference view  | 771 × 10<sup>-3</sup> | 1.20 × 10<sup>-9</sup>  | 438 × 10<sup>-3</sup> | 245 × 10<sup>-3</sup>   | 87.5 × 10<sup>-3</sup> |
+| Implementation  | Build Serial          | Access Serial           | Parallel-for Serial   | Parallel-for OpenMP   | Parallel-for Cuda      |
+|-----------------|-----------------------|-------------------------|-----------------------|-----------------------|------------------------|
+| Wrapper subview | 968 × 10<sup>-3</sup> | 10.4 × 10<sup>-9</sup>  | 711 × 10<sup>-3</sup> | 252 × 10<sup>-3</sup> | 97.7 × 10<sup>-3</sup> |
+| Wrapper array   | 800 × 10<sup>-3</sup> | 0.406 × 10<sup>-9</sup> | 446 × 10<sup>-3</sup> | 230 × 10<sup>-3</sup> | 92.7 × 10<sup>-3</sup> |
+| Reference view  | 771 × 10<sup>-3</sup> | 1.20 × 10<sup>-9</sup>  | 438 × 10<sup>-3</sup> | 245 × 10<sup>-3</sup> | 87.5 × 10<sup>-3</sup> |
 
 Benchmarks are detailed in the next sections.
 

@@ -131,7 +131,7 @@ private:
   /**
    * Get the scalar value of the wrapped view from a list of indices and integer
    * sequence.
-   * @tparam args Integer sequence.
+   * @tparam args Integer sequence (automatically deduced).
    * @param indices List of indices above the sub-wrapper.
    * @param argsSequence Integer sequence of the indices from 0 to `depth` to
    * access `indices`.
