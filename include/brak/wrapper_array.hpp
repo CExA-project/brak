@@ -6,6 +6,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "view.hpp"
+
 namespace brak {
 
 /**
@@ -82,13 +84,9 @@ public:
     if constexpr (getRank() > 1) {
       // return wrapper of the view with a new array of indices
       // make the view unmanaged at its first access
-      using ViewNext = std::conditional_t<
-          View::traits::memory_traits::is_unmanaged, View,
-          Kokkos::View<typename View::traits::data_type,
-                       typename View::traits::array_layout,
-                       typename View::traits::device_type,
-                       typename View::traits::hooks_policy,
-                       Kokkos::MemoryTraits<Kokkos::Unmanaged>>>;
+      using ViewNext =
+          std::conditional_t<View::traits::memory_traits::is_unmanaged, View,
+                             impl::make_unmanaged<View>>;
       // NOTE This disables reference counting on CPU for each view created in
       // each successive wrapper retrieved, which greatly improves performance.
       // On GPU, reference counting of views is already disabled by default.
@@ -138,10 +136,10 @@ private:
    * @return Scalar value of the view.
    */
   template <std::size_t... args>
-  KOKKOS_FUNCTION
-  auto &getValue(Kokkos::Array<std::size_t, depth + 1> const &indices,
-                 [[maybe_unused]] std::integer_sequence<std::size_t, args...>
-                     argsSequence) const {
+  KOKKOS_FUNCTION auto &
+  getValue(Kokkos::Array<std::size_t, depth + 1> const &indices,
+           [[maybe_unused]] std::integer_sequence<std::size_t, args...>
+               argsSequence) const {
     return mData(indices[args]...);
   }
 };

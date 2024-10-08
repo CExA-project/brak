@@ -5,6 +5,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "view.hpp"
+
 namespace brak {
 
 /**
@@ -56,13 +58,9 @@ public:
       using ViewCurrent = decltype(subview);
 
       // make the view unmanaged at its first access
-      using ViewNext = std::conditional_t<
-          ViewCurrent::traits::memory_traits::is_unmanaged, ViewCurrent,
-          Kokkos::View<typename ViewCurrent::traits::data_type,
-                       typename ViewCurrent::traits::array_layout,
-                       typename ViewCurrent::traits::device_type,
-                       typename ViewCurrent::traits::hooks_policy,
-                       Kokkos::MemoryTraits<Kokkos::Unmanaged>>>;
+      using ViewNext =
+          std::conditional_t<ViewCurrent::traits::memory_traits::is_unmanaged,
+                             ViewCurrent, impl::make_unmanaged<ViewCurrent>>;
       // NOTE This disables reference counting on CPU for each view created in
       // each successive wrapper retrieved, which greatly improves performance.
       // On GPU, reference counting of views is already disabled by default.
