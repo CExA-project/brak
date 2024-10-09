@@ -12,3 +12,9 @@ option(BRAK_ENABLE_BENCHMARKS "Build benchmarks of the library")
 
 # compile benchmarks
 option(BRAK_ENABLE_COMPILE_BENCHMARKS "Build compile benchmarks of the library")
+
+# documentation
+option(BRAK_ENABLE_DOCUMENTATION "Build documentation of the library")
+
+# documentation for project developers
+option(BRAK_ENABLE_DOCUMENTATION_DEVMODE "Build developers documentation of the library")

@@ -31,3 +31,7 @@ endif()
 if(BRAK_ENABLE_COMPILE_BENCHMARKS)
     add_subdirectory(compile_benchmarks)
 endif()
+
+if(BRAK_ENABLE_DOCUMENTATION)
+    add_subdirectory(docs)
+endif()

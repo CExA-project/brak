@@ -39,3 +39,7 @@ if(BRAK_ENABLE_BENCHMARKS)
         set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
     endif()
 endif()
+
+if(BRAK_ENABLE_DOCUMENTATION)
+    find_package(Doxygen 1.9.1 REQUIRED QUIET)
+endif()
