@@ -27,27 +27,38 @@ TEST(GET_TEST_NAME(WRAPPER_NAME), test_access) {
 
   WRAPPER_CLASS dataWrapper8D{data};
   static_assert(decltype(dataWrapper8D)::getRank() == 8);
+  static_assert(!std::is_same_v<decltype(dataWrapper8D), int ********>);
 
   auto dataWrapper7D = dataWrapper8D[1];
   static_assert(decltype(dataWrapper7D)::getRank() == 7);
+  static_assert(!std::is_same_v<decltype(dataWrapper7D), int *******>);
 
   auto dataWrapper6D = dataWrapper7D[1];
   static_assert(decltype(dataWrapper6D)::getRank() == 6);
+  static_assert(!std::is_same_v<decltype(dataWrapper6D), int ******>);
 
   auto dataWrapper5D = dataWrapper6D[1];
   static_assert(decltype(dataWrapper5D)::getRank() == 5);
+  static_assert(!std::is_same_v<decltype(dataWrapper5D), int *****>);
 
   auto dataWrapper4D = dataWrapper5D[1];
   static_assert(decltype(dataWrapper4D)::getRank() == 4);
+  static_assert(!std::is_same_v<decltype(dataWrapper4D), int ****>);
 
   auto dataWrapper3D = dataWrapper4D[1];
   static_assert(decltype(dataWrapper3D)::getRank() == 3);
+  static_assert(!std::is_same_v<decltype(dataWrapper3D), int ***>);
 
   auto dataWrapper2D = dataWrapper3D[1];
   static_assert(decltype(dataWrapper2D)::getRank() == 2);
+  static_assert(!std::is_same_v<decltype(dataWrapper2D), int **>);
 
   auto dataWrapper1D = dataWrapper2D[1];
   static_assert(decltype(dataWrapper1D)::getRank() == 1);
+  static_assert(!std::is_same_v<decltype(dataWrapper1D), int *>);
+
+  auto dataValue = dataWrapper1D[1];
+  static_assert(std::is_same_v<decltype(dataValue), int>);
 }
 
 TEST(GET_TEST_NAME(WRAPPER_NAME), test_access_direct) {
@@ -76,10 +87,15 @@ TEST(GET_TEST_NAME(WRAPPER_NAME), test_write_1d) {
 }
 
 TEST(GET_TEST_NAME(WRAPPER_NAME), test_defer) {
-  Kokkos::View<int *, Kokkos::HostSpace> data{"data", 10};
+  Kokkos::View<int **, Kokkos::HostSpace> data{"data", 10, 10};
   WRAPPER_CLASS dataWrapper{data};
 
-  ASSERT_EQ(data.data(), *dataWrapper);
+  auto dataPointer = *dataWrapper;
+
+  static_assert(std::is_pointer_v<decltype(dataPointer)>);
+
+  ASSERT_EQ(data.data(), dataPointer);
+  ASSERT_EQ(data.data(), *(dataWrapper[0]));
 }
 
 TEST(GET_TEST_NAME(WRAPPER_NAME), test_get_view) {
@@ -87,6 +103,7 @@ TEST(GET_TEST_NAME(WRAPPER_NAME), test_get_view) {
   WRAPPER_CLASS dataWrapper{data};
   auto dataView = dataWrapper.getView();
 
+  static_assert(Kokkos::is_view<decltype(dataView)>::value);
   static_assert(std::is_same_v<decltype(data), decltype(dataView)>);
   ASSERT_EQ(data.data(), dataView.data());
 }

@@ -1,6 +1,8 @@
 # Brackets wrapper for Kokkos
 
-Brackets wrapper for Kokkos (or "brak" for short) is a header-only library that proposes a wrapper class to access a Kokkos view with a plain old C array syntax, using brackets.
+Brackets wrapper for Kokkos (or "brak" for short) is a header-only library that proposes a wrapper class to access Kokkos views with a plain old data C array syntax, using brackets.
+
+This library is especially useful if you want to start porting a code to Kokkos by updating the data structures first, while keeping the loops untouched.
 
 ## Install
 
@@ -101,33 +103,59 @@ The documentation is built with the target `docs`.
 
 ## Use
 
-The library allows to wrap a Kokkos view to use it like a plain old C array.
+The library allows to wrap a Kokkos view to use it like a plain old data C array.
 If the number of pair of brackets is the same as the rank of the view, then the resulting object is a scalar:
 
 ```cpp
+#include <cassert>
 #include <Kokkos_Core.hpp>
 #include "brak/wrapper_subview.hpp"
 // or
 #include "brak/wrapper_array.hpp"
 
 void doSomething() {
-  Kokkos::View<int ********> data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
+  Kokkos::View<int ********, Kokkos::HostSpace> data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
   brak::WrapperSubview dataWrapper{data};
   // or
   brak::WrapperArray dataWrapper{data};
 
-  dataWrapper[0][0][0][0][0][0][0] = 10;
+  dataWrapper[0][0][0][0][0][0][0][0] = 10;
+  assert(data(0, 0, 0, 0, 0, 0, 0, 0) == 10);
 }
 ```
 
-To achieve this, two implementations are proposed (they share the same API).
+To achieve this, two implementations are proposed (they share the same API) in the next section.
+
+Keep in mind however that not using the wrapped view up to it's scalar value results in a Brak object:
+
+```cpp
+  auto subDataWrapper = dataWrapper[0][0][0][0];
+  static_assert(!std::is_same_v<decltype(subDataWrapper), int ****>);
+  subDataWrapper[0][0][0][0] = 10;
+```
+
+It is possible to retrieve the current wrapped view with the `getView` method:
+
+```cpp
+  auto subData = dataWrapper[0][0][0][0].getView();
+  static_assert(Kokkos::is_view<decltype(subData)>::value);
+```
+
+It is also possible to get the raw pointer of the current wrapped view with the defer operator, even if this may lead to unpredictable behaviors:
+
+```cpp
+  auto subPointer = *(dataWrapper[0][0][0][0]);
+  static_assert(std::is_pointer_v<decltype(*subPointer)>);
+```
 
 ### Subview wrapper approach
 
-With this approach, the class `brak::WrapperSubview` wraps a view, and each call to the brackets operator gives a new instance of the class wrapping a subview.
+With this approach, the class `brak::WrapperSubview` wraps a view, and each call to the brackets operator gives a new instance of the class wrapping a subview of a rank lowered by one.
 The subview is unmanaged, in order to disable reference counting and increase performance.
 
-This approach is not inefficient in terms of performance at compile time and at runtime, due to the remaining reference counting.
+This approach is not efficient in terms of performance at compile time and at runtime, due to the remaining reference counting that could not be disabled.
+
+This implementation can be still interesting as if you don't go up to the scalar value, the intermediate object returned by the brackets operator is still useable somehow (it's a subview, after all).
 
 ### Array wrapper approach
 

@@ -102,7 +102,7 @@ public:
    * Defer the wrapper to the pointer data in the wrapped view.
    * @return Raw pointer to the wrapped data.
    * @note This method may give access to data that are not contiguous in
-   * memory and lead to unpredictible behaviors.
+   * memory and lead to unpredictable behaviors.
    */
   KOKKOS_FUNCTION
   typename View::value_type *operator*() { return mData.data(); }
