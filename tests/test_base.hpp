@@ -91,7 +91,7 @@ TEST(GET_TEST_NAME(WRAPPER_NAME), test_get_view) {
   ASSERT_EQ(data.data(), dataView.data());
 }
 
-TEST(GET_TEST_NAME_INTEGRATION(WRAPPER_NAME), test_access_for) {
+TEST(GET_TEST_NAME_INTEGRATION(WRAPPER_NAME), test_access_nested_for) {
   Kokkos::View<int ******, Kokkos::DefaultHostExecutionSpace::memory_space>
       data{"data", 2, 2, 2, 2, 2, 2};
   WRAPPER_CLASS dataWrapper{data};
