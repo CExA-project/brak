@@ -83,10 +83,10 @@ You can build tests with the CMake option `BRAK_ENABLE_TESTS`, and run them with
 
 If you don't have a GPU available when compiling, you have to disable the CMake option `BRAK_ENABLE_GTEST_DISCOVER_TESTS`.
 
-<!-- ## Examples -->
-<!--  -->
-<!-- You can build examples with the CMake option `BRAK_ENABLE_EXAMPLES`. -->
-<!-- They should be run individually. -->
+## Examples
+
+You can build examples with the CMake option `BRAK_ENABLE_EXAMPLES`.
+They should be run individually.
 
 ## Benchmarks
 
