@@ -93,6 +93,12 @@ If you don't have a GPU available when compiling, you have to disable the CMake 
 Benchmarks are built with the CMake option `BRAK_ENABLE_BENCHMARKS`.
 They should be run individually.
 
+## Documentation
+
+The API documentation is handled by Doxygen (1.9.1 or newer) and is built with the CMake option `BRAK_ENABLE_DOCUMENTATION`.
+The private API is not included by default and is added with the option `BRAK_ENABLE_DOCUMENTATION_DEVMODE`.
+The documentation is built with the target `docs`.
+
 ## Use
 
 The library allows to wrap a Kokkos view to use it like a plain old C array.
