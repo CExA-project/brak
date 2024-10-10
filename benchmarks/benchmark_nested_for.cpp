@@ -11,17 +11,17 @@ void benchmark_set_wrapper_subview(benchmark::State &state) {
   brak::WrapperSubview dataTempWrapper{dataTemp};
 
   while (state.KeepRunning()) {
-      for (unsigned i = 0; i < data.extent(0); i++)
-          for (unsigned j = 0; j < data.extent(1); j++)
-              for (unsigned k = 0; k < data.extent(2); k++) {
-                  dataTempWrapper[i][j][k] = dataWrapper[i][j][k] + i + j + k;
-              }
+    for (unsigned i = 0; i < data.extent(0); i++)
+      for (unsigned j = 0; j < data.extent(1); j++)
+        for (unsigned k = 0; k < data.extent(2); k++) {
+          dataTempWrapper[i][j][k] = dataWrapper[i][j][k] + i + j + k;
+        }
 
-      for (unsigned i = 0; i < data.extent(0); i++)
-          for (unsigned j = 0; j < data.extent(1); j++)
-              for (unsigned k = 0; k < data.extent(2); k++) {
-                  dataWrapper[i][j][k] = dataTempWrapper[i][j][k];
-              }
+    for (unsigned i = 0; i < data.extent(0); i++)
+      for (unsigned j = 0; j < data.extent(1); j++)
+        for (unsigned k = 0; k < data.extent(2); k++) {
+          dataWrapper[i][j][k] = dataTempWrapper[i][j][k];
+        }
   }
 }
 
@@ -34,17 +34,17 @@ void benchmark_set_wrapper_array(benchmark::State &state) {
   brak::WrapperArray dataTempWrapper{dataTemp};
 
   while (state.KeepRunning()) {
-      for (unsigned i = 0; i < data.extent(0); i++)
-          for (unsigned j = 0; j < data.extent(1); j++)
-              for (unsigned k = 0; k < data.extent(2); k++) {
-                  dataTempWrapper[i][j][k] = dataWrapper[i][j][k] + i + j + k;
-              }
+    for (unsigned i = 0; i < data.extent(0); i++)
+      for (unsigned j = 0; j < data.extent(1); j++)
+        for (unsigned k = 0; k < data.extent(2); k++) {
+          dataTempWrapper[i][j][k] = dataWrapper[i][j][k] + i + j + k;
+        }
 
-      for (unsigned i = 0; i < data.extent(0); i++)
-          for (unsigned j = 0; j < data.extent(1); j++)
-              for (unsigned k = 0; k < data.extent(2); k++) {
-                  dataWrapper[i][j][k] = dataTempWrapper[i][j][k];
-              }
+    for (unsigned i = 0; i < data.extent(0); i++)
+      for (unsigned j = 0; j < data.extent(1); j++)
+        for (unsigned k = 0; k < data.extent(2); k++) {
+          dataWrapper[i][j][k] = dataTempWrapper[i][j][k];
+        }
   }
 }
 
@@ -55,17 +55,17 @@ void benchmark_set_view(benchmark::State &state) {
   Kokkos::View<int ***, Kokkos::HostSpace> dataTemp{"data", 30, 30, 30};
 
   while (state.KeepRunning()) {
-      for (unsigned i = 0; i < data.extent(0); i++)
-          for (unsigned j = 0; j < data.extent(1); j++)
-              for (unsigned k = 0; k < data.extent(2); k++) {
-                  dataTemp(i, j, k) = data(i, j, k) + i + j + k;
-              }
+    for (unsigned i = 0; i < data.extent(0); i++)
+      for (unsigned j = 0; j < data.extent(1); j++)
+        for (unsigned k = 0; k < data.extent(2); k++) {
+          dataTemp(i, j, k) = data(i, j, k) + i + j + k;
+        }
 
-      for (unsigned i = 0; i < data.extent(0); i++)
-          for (unsigned j = 0; j < data.extent(1); j++)
-              for (unsigned k = 0; k < data.extent(2); k++) {
-                  data(i, j, k) = dataTemp(i, j, k);
-              }
+    for (unsigned i = 0; i < data.extent(0); i++)
+      for (unsigned j = 0; j < data.extent(1); j++)
+        for (unsigned k = 0; k < data.extent(2); k++) {
+          data(i, j, k) = dataTemp(i, j, k);
+        }
   }
 }
 
