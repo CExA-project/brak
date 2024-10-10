@@ -81,7 +81,7 @@ Alternatively, you can also copy `include/brak` in your project and start using 
 
 You can build tests with the CMake option `BRAK_ENABLE_TESTS`, and run them with `ctest`.
 
-If you don't have a GPU available when compiling, you have to disable the CMake option `BRAK_ENABLE_GTEST_DISCOVER_TESTS`.
+If you don't have a GPU available when compiling with a GPU backend activated, you have to disable the CMake option `BRAK_ENABLE_GTEST_DISCOVER_TESTS`.
 
 ## Examples
 
