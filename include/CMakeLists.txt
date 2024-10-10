@@ -7,7 +7,7 @@ target_include_directories(
     brak
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
-        $<INSTALL_INTERFACE:.>
+        $<INSTALL_INTERFACE:include>
 )
 
 target_link_libraries(

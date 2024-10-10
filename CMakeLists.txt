@@ -15,6 +15,8 @@ include(dependencies)
 
 add_subdirectory(include)
 
+include(install)
+
 if(BRAK_ENABLE_TESTS)
     enable_testing()
     add_subdirectory(tests)
