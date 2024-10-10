@@ -42,4 +42,10 @@ endif()
 
 if(BRAK_ENABLE_DOCUMENTATION)
     find_package(Doxygen 1.9.1 REQUIRED QUIET)
+
+    FetchContent_Declare(
+        awesome_doxygen_css
+        URL https://github.com/jothepro/doxygen-awesome-css/archive/refs/tags/v2.3.4.tar.gz
+    )
+    FetchContent_MakeAvailable(awesome_doxygen_css)
 endif()

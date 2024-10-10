@@ -9,6 +9,7 @@ if(BRAK_ENABLE_DOCUMENTATION_DEVMODE)
 else()
     set(DOXYGEN_DEVMODE "NO")
 endif()
+set(DOXYGEN_AWESOME_CSS_PATH "${awesome_doxygen_css_SOURCE_DIR}")
 
 configure_file(
     ${DOXYGEN_IN}
@@ -18,7 +19,6 @@ configure_file(
 
 add_custom_target(
     docs
-    ALL
     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating API documentation with Doxygen"
