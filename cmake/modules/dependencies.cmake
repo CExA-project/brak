@@ -34,9 +34,9 @@ if(BRAK_ENABLE_BENCHMARKS)
         FetchContent_MakeAvailable(googlebenchmark)
 
         # override configuration
-        set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "" FORCE)
-        set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
-        set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+        set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "")
+        set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "")
+        set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
     endif()
 endif()
 
