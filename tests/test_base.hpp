@@ -23,7 +23,7 @@ TEST(GET_TEST_NAME(WRAPPER_NAME), test_create) {
 }
 
 TEST(GET_TEST_NAME(WRAPPER_NAME), test_access) {
-  Kokkos::View<int ********> data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
+  Kokkos::View<int ********, Kokkos::HostSpace> data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
 
   WRAPPER_CLASS dataWrapper8D{data};
   static_assert(decltype(dataWrapper8D)::getRank() == 8);
