@@ -121,7 +121,8 @@ private:
    * @return Scalar value of the view.
    */
   KOKKOS_FUNCTION
-  auto &getValue(Kokkos::Array<std::size_t, depth + 1> const &indices) const {
+  constexpr auto &
+  getValue(Kokkos::Array<std::size_t, depth + 1> const &indices) const {
     return getValue(indices,
                     std::make_integer_sequence<std::size_t, depth + 1>());
   }
@@ -136,7 +137,7 @@ private:
    * @return Scalar value of the view.
    */
   template <std::size_t... args>
-  KOKKOS_FUNCTION auto &
+  KOKKOS_FUNCTION constexpr auto &
   getValue(Kokkos::Array<std::size_t, depth + 1> const &indices,
            [[maybe_unused]] std::integer_sequence<std::size_t, args...>
                argsSequence) const {
