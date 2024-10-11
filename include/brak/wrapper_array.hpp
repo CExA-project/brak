@@ -41,9 +41,9 @@ public:
   explicit WrapperArray(View const data) : mData(data) {}
 
   /**
-   * Construct a sub-wrapper from a view and a list of indices.
+   * Construct a sub-wrapper from a view and a array of indices.
    * @param data Input view.
-   * @param indices List of indices above the sub-wrapper.
+   * @param indices Array of indices above the sub-wrapper.
    */
   KOKKOS_FUNCTION
   WrapperArray(View const data,
@@ -71,15 +71,9 @@ public:
    * has a dimension of 1.
    */
   KOKKOS_FUNCTION
-  decltype(auto) operator[](std::size_t const index) const {
+  constexpr decltype(auto) operator[](std::size_t const index) const {
     // recreate array of indices
-    Kokkos::Array<std::size_t, depth + 1> indices;
-    if constexpr (mIndices.size() > 0) {
-      for (std::size_t i = 0; i < mIndices.size(); i++) {
-        indices[i] = mIndices[i];
-      }
-    }
-    indices[depth] = index;
+    Kokkos::Array<std::size_t, depth + 1> indices = extendIndices(index);
 
     if constexpr (getRank() > 1) {
       // return wrapper of the view with a new array of indices
@@ -116,32 +110,58 @@ public:
 
 private:
   /**
-   * Get the scalar value of the wrapped view from a list of indices.
-   * @param indices List of indices above the sub-wrapper.
+   * Recreate an array of indices with a new index.
+   * @param index New index to add to the array of indices.
+   * @return Extended array of indices.
+   */
+  KOKKOS_FUNCTION
+  constexpr Kokkos::Array<std::size_t, depth + 1>
+  extendIndices(std::size_t const index) const {
+    return extendIndices(index, std::make_index_sequence<depth>());
+  }
+
+  /**
+   * Recreate an array of indices with a new index and an index sequence.
+   * @tparam indexSequence Index sequence (automatically deduced).
+   * @param index New index to add to the array of indices.
+   * @param indexSequenceArg Index sequence of the indices from 0 to `depth` to
+   * access `mIndices`.
+   * @return Extended array of indices.
+   */
+  template <std::size_t... indexSequence>
+  KOKKOS_FUNCTION constexpr Kokkos::Array<std::size_t, depth + 1>
+  extendIndices(std::size_t const index,
+                [[maybe_unused]] std::index_sequence<indexSequence...>
+                    indexSequenceArg) const {
+    return {{mIndices[indexSequence]..., index}};
+  }
+
+  /**
+   * Get the scalar value of the wrapped view from a array of indices.
+   * @param indices Array of indices above the sub-wrapper.
    * @return Scalar value of the view.
    */
   KOKKOS_FUNCTION
   constexpr auto &
   getValue(Kokkos::Array<std::size_t, depth + 1> const &indices) const {
-    return getValue(indices,
-                    std::make_integer_sequence<std::size_t, depth + 1>());
+    return getValue(indices, std::make_index_sequence<depth + 1>());
   }
 
   /**
-   * Get the scalar value of the wrapped view from a list of indices and integer
-   * sequence.
-   * @tparam args Integer sequence (automatically deduced).
-   * @param indices List of indices above the sub-wrapper.
-   * @param argsSequence Integer sequence of the indices from 0 to `depth` to
+   * Get the scalar value of the wrapped view from a array of indices and an
+   * index sequence.
+   * @tparam indexSequence Index sequence (automatically deduced).
+   * @param indices Array of indices above the sub-wrapper.
+   * @param indexSequenceArg Index sequence of the indices from 0 to `depth` to
    * access `indices`.
    * @return Scalar value of the view.
    */
-  template <std::size_t... args>
+  template <std::size_t... indexSequence>
   KOKKOS_FUNCTION constexpr auto &
   getValue(Kokkos::Array<std::size_t, depth + 1> const &indices,
-           [[maybe_unused]] std::integer_sequence<std::size_t, args...>
-               argsSequence) const {
-    return mData(indices[args]...);
+           [[maybe_unused]] std::index_sequence<indexSequence...>
+               indexSequenceArg) const {
+    return mData(indices[indexSequence]...);
   }
 };
 

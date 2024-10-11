@@ -168,27 +168,27 @@ This approach has performance that are on par with Kokkos views.
 
 Benchmarks done using an Intel Core i7-13800H and a NVIDIA A500 GPU, for a release build (unless specified in the details), all times in seconds.
 
-| Implementation  | Build Serial          | Access Serial           | Nested for Serial       | Parallel-for Serial   | Parallel-for OpenMP   | Parallel-for Cuda      |
+| Implementation  | Build Serial          | Access Serial           | Nested-for Serial       | Parallel-for Serial   | Parallel-for OpenMP   | Parallel-for Cuda      |
 |-----------------|-----------------------|-------------------------|-------------------------|-----------------------|-----------------------|------------------------|
-| Wrapper subview | 968 × 10<sup>-3</sup> | 10.4 × 10<sup>-9</sup>  | 2304e × 10<sup>-3</sup> | 711 × 10<sup>-3</sup> | 252 × 10<sup>-3</sup> | 97.7 × 10<sup>-3</sup> |
-| Wrapper array   | 800 × 10<sup>-3</sup> | 0.406 × 10<sup>-9</sup> | 37.4e × 10<sup>-3</sup> | 446 × 10<sup>-3</sup> | 230 × 10<sup>-3</sup> | 92.7 × 10<sup>-3</sup> |
-| Reference view  | 771 × 10<sup>-3</sup> | 1.20 × 10<sup>-9</sup>  | 56.0e × 10<sup>-3</sup> | 438 × 10<sup>-3</sup> | 245 × 10<sup>-3</sup> | 87.5 × 10<sup>-3</sup> |
+| Wrapper subview | 897 × 10<sup>-3</sup> | 10.1 × 10<sup>-9</sup>  | 2281e × 10<sup>-3</sup> | 673 × 10<sup>-3</sup> | 251 × 10<sup>-3</sup> | 98.1 × 10<sup>-3</sup> |
+| Wrapper array   | 738 × 10<sup>-3</sup> | 0.398 × 10<sup>-9</sup> | 36.0e × 10<sup>-3</sup> | 432 × 10<sup>-3</sup> | 218 × 10<sup>-3</sup> | 89.8 × 10<sup>-3</sup> |
+| Reference view  | 709 × 10<sup>-3</sup> | 1.11 × 10<sup>-9</sup>  | 57.6e × 10<sup>-3</sup> | 415 × 10<sup>-3</sup> | 230 × 10<sup>-3</sup> | 88.5 × 10<sup>-3</sup> |
 
 Benchmarks are detailed in the next sections.
 
-In terms of compilation time, the subview wrapper approach takes 25 % more time than a reference view, and the array approach 4 %.
+In terms of compilation time, the subview wrapper approach takes 27 % more time than a reference view, and the array approach 4 %.
 
-When accessing a single element, a subview wrapper is 8.7 times slower than a view, and an array wrapper is 3 times faster.
+When accessing a single element, a subview wrapper is 9.1 times slower than a view, and an array wrapper is 2.8 times faster.
 The later is due to reference counting being disabled for wrappers.
 Though using it, the subview wrapper does not benefit of it much, but the same order of magnitude of execution time can be obtained if the initial view is already unmanaged.
 
-For a more realistic use of the arrays, a subview wrapper is 41 times slower than a view, and an array wrapper is 1.5 times faster.
+For a more realistic use of the arrays, a subview wrapper is 40 times slower than a view, and an array wrapper is 1.6 times faster.
 Frequent accesses to data is less well handled by the subview wrapper.
 Using an already unmanaged view brings the performance of the subview wrapper similar to the use of Kokkos views.
 
 For a heavy access of elements, a subview wrapper is 62 % times slower than a view for CPU serial execution.
-It is 3 % slower, respectively 12 % slower, for CPU parallel execution, respectively GPU execution, meaning that parallel execution tends to lower the difference.
-An array wrapper is 2 % slower, respectively 6 % faster and 6 % slower, for CPU serial execution, respectively CPU parallel execution and GPU execution, which shows that this implementation has a limited impact on performance.
+It is 9 % slower, respectively 11 % slower, for CPU parallel execution, respectively GPU execution, meaning that parallel execution tends to lower the difference.
+An array wrapper is 4 % slower, respectively 6 % faster and 1 % slower, for CPU serial execution, respectively CPU parallel execution and GPU execution, which shows that this implementation has a limited impact on performance.
 
 ### Build benchmark details
 
@@ -199,7 +199,7 @@ This [compile benchmark](./compile_benchmarks) consists in compiling in debug mo
 This [benchmark](./benchmarks/benchmark_access.cpp) uses a view of rank 8 of dimension 2 × 2 × 2 × 2 × 2 × 2 × 2 × 2 (256 elements) containing 4 bits integers (1.024 kB). 
 It consists in measuring the time to access and set the element 1, 1, 1, 1, 1, 1, 1, 1 to 10.
 
-### Nested for benchmark details
+### Nested-for benchmark details
 
 This [benchmark](./benchmarks/benchmark_nested_for.cpp) uses two views of rank 3 of dimension 30 × 30 × 30 (27 × 10<sup>3</sup> elements) containing 4 bits integers each (216 kB).
 It consists in measuring the time to update one view from the other with a stencil, then to swap the two views.
