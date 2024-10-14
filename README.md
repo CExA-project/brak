@@ -167,28 +167,29 @@ This approach has performance that are on par with Kokkos views.
 ## Performance
 
 Benchmarks done using an Intel Core i7-13800H and a NVIDIA A500 GPU, for a release build (unless specified in the details), all times in seconds.
+Performance ratios are expressed with standard deviation, between parentheses.
 
 | Implementation  | Build Serial          | Access Serial           | Nested-for Serial       | Parallel-for Serial   | Parallel-for OpenMP   | Parallel-for Cuda      |
 |-----------------|-----------------------|-------------------------|-------------------------|-----------------------|-----------------------|------------------------|
-| Wrapper subview | 897 × 10<sup>-3</sup> | 10.1 × 10<sup>-9</sup>  | 2281e × 10<sup>-3</sup> | 673 × 10<sup>-3</sup> | 251 × 10<sup>-3</sup> | 98.1 × 10<sup>-3</sup> |
-| Wrapper array   | 738 × 10<sup>-3</sup> | 0.398 × 10<sup>-9</sup> | 36.0e × 10<sup>-3</sup> | 432 × 10<sup>-3</sup> | 218 × 10<sup>-3</sup> | 89.8 × 10<sup>-3</sup> |
-| Reference view  | 709 × 10<sup>-3</sup> | 1.11 × 10<sup>-9</sup>  | 57.6e × 10<sup>-3</sup> | 415 × 10<sup>-3</sup> | 230 × 10<sup>-3</sup> | 88.5 × 10<sup>-3</sup> |
+| Wrapper subview | 984 × 10<sup>-3</sup> | 9.89 × 10<sup>-9</sup>  | 2337e × 10<sup>-3</sup> | 726 × 10<sup>-3</sup> | 353 × 10<sup>-3</sup> | 97.3 × 10<sup>-3</sup> |
+| Wrapper array   | 805 × 10<sup>-3</sup> | 0.392 × 10<sup>-9</sup> | 36.1e × 10<sup>-3</sup> | 451 × 10<sup>-3</sup> | 309 × 10<sup>-3</sup> | 89.1 × 10<sup>-3</sup> |
+| Reference view  | 768 × 10<sup>-3</sup> | 1.14 × 10<sup>-9</sup>  | 58.5e × 10<sup>-3</sup> | 443 × 10<sup>-3</sup> | 332 × 10<sup>-3</sup> | 87.7 × 10<sup>-3</sup> |
 
 Benchmarks are detailed in the next sections.
 
-In terms of compilation time, the subview wrapper approach takes 27 % more time than a reference view, and the array approach 4 %.
+In terms of compilation time, building a code using a subview wrapper is 1.28 (3 %) times slower than a code using a reference view, and a code using an array wrapper is 1.05 (3 %) times slower.
 
-When accessing a single element, a subview wrapper is 9.1 times slower than a view, and an array wrapper is 2.8 times faster.
+When accessing a single element, a subview wrapper is 8.7 (1 %) times slower than a view, and an array wrapper is 2.9 (1 %) times faster.
 The later is due to reference counting being disabled for wrappers.
 Though using it, the subview wrapper does not benefit of it much, but the same order of magnitude of execution time can be obtained if the initial view is already unmanaged.
 
-For a more realistic use of the arrays, a subview wrapper is 40 times slower than a view, and an array wrapper is 1.6 times faster.
+For a more realistic use of the arrays, a subview wrapper is 40 (1 %) times slower than a view, and an array wrapper is 1.6 (2 %) times faster.
 Frequent accesses to data is less well handled by the subview wrapper.
 Using an already unmanaged view brings the performance of the subview wrapper similar to the use of Kokkos views.
 
-For a heavy access of elements, a subview wrapper is 62 % times slower than a view for CPU serial execution.
-It is 9 % slower, respectively 11 % slower, for CPU parallel execution, respectively GPU execution, meaning that parallel execution tends to lower the difference.
-An array wrapper is 4 % slower, respectively 6 % faster and 1 % slower, for CPU serial execution, respectively CPU parallel execution and GPU execution, which shows that this implementation has a limited impact on performance.
+For a heavy access of elements, a subview wrapper is 1.64 (2 %) times slower than a view for CPU serial execution.
+It is 1.06 (7 %) times slower, respectively 1.11 (0.4 %) times slower, for CPU parallel execution, respectively GPU execution, meaning that parallel execution tends to lower the difference.
+An array wrapper is 1.02 (2 %) times slower, respectively 1.8 (7 %) faster and 1.02 (0.3 %) times slower, for CPU serial execution, respectively CPU parallel execution and GPU execution, which shows that this implementation has a limited impact on performance.
 
 ### Build benchmark details
 
