@@ -117,7 +117,7 @@ private:
   KOKKOS_FUNCTION
   constexpr Kokkos::Array<std::size_t, depth + 1>
   extendIndices(std::size_t const index) const {
-    return extendIndices(index, std::make_index_sequence<depth>());
+    return extendIndices(std::make_index_sequence<depth>(), index);
   }
 
   /**
@@ -129,10 +129,9 @@ private:
    * @return Extended array of indices.
    */
   template <std::size_t... indexSequence>
-  KOKKOS_FUNCTION constexpr Kokkos::Array<std::size_t, depth + 1>
-  extendIndices(std::size_t const index,
-                [[maybe_unused]] std::index_sequence<indexSequence...>
-                    indexSequenceArg) const {
+  KOKKOS_FUNCTION constexpr Kokkos::Array<std::size_t, depth + 1> extendIndices(
+      [[maybe_unused]] std::index_sequence<indexSequence...> indexSequenceArg,
+      std::size_t const index) const {
     return {{mIndices[indexSequence]..., index}};
   }
 
