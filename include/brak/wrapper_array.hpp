@@ -93,6 +93,29 @@ public:
   }
 
   /**
+   * Directly access to a scalar value.
+   * @tparam IndicesType Type of the indices. They will be casted to
+   * `std::size_t`.
+   * @param indices Pack of indices. The number of indices must match the rank
+   * of the current wrapper.
+   * @return Reference to a scalar of the view at the given indices.
+   */
+  template <typename... IndicesType>
+  KOKKOS_FUNCTION constexpr auto &
+  operator()(IndicesType const... indices) const {
+    static_assert(sizeof...(indices) == getRank(), "Rank mismatch");
+
+    // merge the two arrays of indices
+    Kokkos::Array<std::size_t, getRankSource()> indicesJoined =
+        extendIndices(static_cast<std::size_t>(indices)...);
+    // NOTE The indices are converted to `std::size_t` as it seems not possible
+    // to easily obtain a parameter pack of the same type.
+
+    // return reference to scalar
+    return getValue(indicesJoined);
+  }
+
+  /**
    * Defer the wrapper to the pointer data in the wrapped view.
    * @return Raw pointer to the wrapped data.
    * @note This method may give access to data that are not contiguous in
@@ -121,6 +144,18 @@ private:
   }
 
   /**
+   * Recreate an array of indices with new indices.
+   * @tparam IndicesType Type of the indices.
+   * @param indices Pack of indices.
+   * @return Extended array of indices.
+   */
+  template <typename... IndicesType>
+  KOKKOS_FUNCTION constexpr Kokkos::Array<std::size_t, getRankSource()>
+  extendIndices(IndicesType const... indices) const {
+    return extendIndices(std::make_index_sequence<depth>(), indices...);
+  }
+
+  /**
    * Recreate an array of indices with a new index and an index sequence.
    * @tparam indexSequence Index sequence (automatically deduced).
    * @param index New index to add to the array of indices.
@@ -136,14 +171,31 @@ private:
   }
 
   /**
+   * Recreate an array of indices with new indices and an index sequence.
+   * @tparam indexSequence Index sequence (automatically deduced).
+   * @tparam IndicesType Type of the indices.
+   * @param indexSequenceArg Index sequence of the indices from 0 to `depth` to
+   * access `mIndices`.
+   * @param indices Pack of indices.
+   * @return Extended array of indices.
+   */
+  template <std::size_t... indexSequence, typename... IndicesType>
+  KOKKOS_FUNCTION constexpr Kokkos::Array<std::size_t, getRankSource()>
+  extendIndices(
+      [[maybe_unused]] std::index_sequence<indexSequence...> indexSequenceArg,
+      IndicesType const... indices) const {
+    return {{mIndices[indexSequence]..., indices...}};
+  }
+
+  /**
    * Get the scalar value of the wrapped view from a array of indices.
    * @param indices Array of indices above the sub-wrapper.
    * @return Scalar value of the view.
    */
-  KOKKOS_FUNCTION
-  constexpr auto &
-  getValue(Kokkos::Array<std::size_t, depth + 1> const &indices) const {
-    return getValue(indices, std::make_index_sequence<depth + 1>());
+  template <std::size_t depthNext>
+  KOKKOS_FUNCTION constexpr auto &
+  getValue(Kokkos::Array<std::size_t, depthNext> const &indices) const {
+    return getValue(indices, std::make_index_sequence<depthNext>());
   }
 
   /**
@@ -155,9 +207,9 @@ private:
    * access `indices`.
    * @return Scalar value of the view.
    */
-  template <std::size_t... indexSequence>
+  template <std::size_t depthNext, std::size_t... indexSequence>
   KOKKOS_FUNCTION constexpr auto &
-  getValue(Kokkos::Array<std::size_t, depth + 1> const &indices,
+  getValue(Kokkos::Array<std::size_t, depthNext> const &indices,
            [[maybe_unused]] std::index_sequence<indexSequence...>
                indexSequenceArg) const {
     return mData(indices[indexSequence]...);

@@ -74,6 +74,22 @@ public:
   }
 
   /**
+   * Directly access to a scalar value.
+   * @tparam IndicesType Type of the indices. They will be casted to
+   * `std::size_t`.
+   * @param indices Pack of indices. The number of indices must match the rank
+   * of the current wrapper.
+   * @return Reference to a scalar of the view at the given indices.
+   */
+  template <typename... IndicesType>
+  KOKKOS_FUNCTION constexpr auto &operator()(IndicesType const... indices) const {
+    static_assert(sizeof...(indices) == getRank(), "Rank mismatch");
+
+    // return reference to scalar
+    return mData(static_cast<std::size_t>(indices)...);
+  }
+
+  /**
    * Defer the wrapper to the pointer data in the wrapped view.
    * @return Raw pointer to the wrapped data.
    * @note This method may give access to data that are not contiguous in
