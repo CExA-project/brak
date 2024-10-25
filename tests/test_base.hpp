@@ -125,6 +125,17 @@ TEST(GET_TEST_NAME(WRAPPER_NAME), test_write_1d) {
   ASSERT_EQ(data(1), 1);
 }
 
+TEST(GET_TEST_NAME(WRAPPER_NAME), test_write_1d_parentheses) {
+  Kokkos::View<int *, Kokkos::HostSpace> data{"data", 10};
+  WRAPPER_CLASS dataWrapper{data};
+
+  ASSERT_EQ(data(1), 0);
+
+  dataWrapper(1) = 1;
+
+  ASSERT_EQ(data(1), 1);
+}
+
 TEST(GET_TEST_NAME(WRAPPER_NAME), test_defer) {
   Kokkos::View<int **, Kokkos::HostSpace> data{"data", 10, 10};
   WRAPPER_CLASS dataWrapper{data};
