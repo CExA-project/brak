@@ -191,9 +191,7 @@ Performance ratios are expressed with standard deviation, between parentheses.
 | Reference view  | 768 × 10<sup>-3</sup> | 1.14 × 10<sup>-9</sup>  | 58.5e × 10<sup>-3</sup> | 443 × 10<sup>-3</sup> | 332 × 10<sup>-3</sup> | 87.7 × 10<sup>-3</sup> |
 
 <p align="center">
-
-![Performance graph](images/perf.png)
-
+<img src="images/perf.png" alt="Performance graph">
 </p>
 
 Benchmarks are detailed in the next sections.
