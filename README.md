@@ -129,8 +129,8 @@ To achieve this, two implementations are proposed (they share the same API) in t
 Is it also possible to use the parentheses operator, like Kokkos views:
 
 ```cpp
-  dataWrapper(0, 0, 0, 0, 0, 0, 0, 0) = 10;
-  assert(data(0, 0, 0, 0, 0, 0, 0, 0) == 10);
+  dataWrapper(0, 0, 0, 0, 0, 0, 0, 0) = 20;
+  assert(data(0, 0, 0, 0, 0, 0, 0, 0) == 20);
 ```
 
 Keep in mind however that not using the wrapped view up to it's scalar value results in a Brak object:
@@ -138,8 +138,15 @@ Keep in mind however that not using the wrapped view up to it's scalar value res
 ```cpp
   auto subDataWrapper = dataWrapper[0][0][0][0];
   static_assert(!std::is_same_v<decltype(subDataWrapper), int ****>);
-  subDataWrapper[0][0][0][0] = 10;
-  assert(data(0, 0, 0, 0, 0, 0, 0, 0) == 10);
+  subDataWrapper[0][0][0][0] = 30;
+  assert(data(0, 0, 0, 0, 0, 0, 0, 0) == 30);
+```
+
+A Brak object of any depth level can still be used either with brackets, or with parentheses too:
+
+```cpp
+  subDataWrapper(0, 0, 0, 0) = 40;
+  assert(data(0, 0, 0, 0, 0, 0, 0, 0) == 40);
 ```
 
 It is possible to retrieve the current wrapped view with the `getView` method:
