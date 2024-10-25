@@ -126,12 +126,20 @@ void doSomething() {
 
 To achieve this, two implementations are proposed (they share the same API) in the next section.
 
+Is it also possible to use the parentheses operator, like Kokkos views:
+
+```cpp
+  dataWrapper(0, 0, 0, 0, 0, 0, 0, 0) = 10;
+  assert(data(0, 0, 0, 0, 0, 0, 0, 0) == 10);
+```
+
 Keep in mind however that not using the wrapped view up to it's scalar value results in a Brak object:
 
 ```cpp
   auto subDataWrapper = dataWrapper[0][0][0][0];
   static_assert(!std::is_same_v<decltype(subDataWrapper), int ****>);
   subDataWrapper[0][0][0][0] = 10;
+  assert(data(0, 0, 0, 0, 0, 0, 0, 0) == 10);
 ```
 
 It is possible to retrieve the current wrapped view with the `getView` method:
