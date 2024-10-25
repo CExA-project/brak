@@ -190,6 +190,12 @@ Performance ratios are expressed with standard deviation, between parentheses.
 | Wrapper array   | 805 × 10<sup>-3</sup> | 0.392 × 10<sup>-9</sup> | 36.1e × 10<sup>-3</sup> | 451 × 10<sup>-3</sup> | 309 × 10<sup>-3</sup> | 89.1 × 10<sup>-3</sup> |
 | Reference view  | 768 × 10<sup>-3</sup> | 1.14 × 10<sup>-9</sup>  | 58.5e × 10<sup>-3</sup> | 443 × 10<sup>-3</sup> | 332 × 10<sup>-3</sup> | 87.7 × 10<sup>-3</sup> |
 
+<p align="center">
+
+![Performance graph](images/perf.png)
+
+</p>
+
 Benchmarks are detailed in the next sections.
 
 In terms of compilation time, building a code using a subview wrapper is 1.28 (3 %) times slower than a code using a reference view, and a code using an array wrapper is 1.05 (3 %) times slower.
