@@ -6,7 +6,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "kokkos_view.hpp"
+#include "brak/kokkos_view.hpp"
 
 namespace brak {
 
