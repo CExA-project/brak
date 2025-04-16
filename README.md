@@ -186,9 +186,9 @@ Performance ratios are expressed with standard deviation, between parentheses.
 
 | Implementation  | Build Serial                   | Access Serial                    | Nested-for Serial                  | Parallel-for Serial             | Parallel-for OpenMP           | Parallel-for Cuda              |
 |-----------------|--------------------------------|----------------------------------|------------------------------------|---------------------------------|-------------------------------|--------------------------------|
-| Wrapper subview | (950 ± 11.7) × 10<sup>-3</sup> | (9.88 ± 0.090) × 10<sup>-9</sup> | (2260.0 ± 210.6) × 10<sup>-3</sup> | (670 ± 129.6) × 10<sup>-3</sup> | (304 ± 179) × 10<sup>-3</sup> | (97.2 ± 0.4) × 10<sup>-3</sup> |
-| Wrapper array   | (778 ± 12.0) × 10<sup>-3</sup> | (0.39 ± 0.005) × 10<sup>-9</sup> | (33.1 ± 0.5) × 10<sup>-3</sup>     | (431 ± 48.7) × 10<sup>-3</sup>  | (236 ± 130) × 10<sup>-3</sup> | (88.9 ± 0.2) × 10<sup>-3</sup> |
-| Kokkos view     | (738 ± 15.0) × 10<sup>-3</sup> | (1.10 ± 0.004) × 10<sup>-9</sup> | (58.0 ± 0.6) × 10<sup>-3</sup>     | (412 ± 34.8) × 10<sup>-3</sup>  | (289 ± 186) × 10<sup>-3</sup> | (87.3 ± 0.1) × 10<sup>-3</sup> |
+| Wrapper subview | (950~±~11.7) × 10<sup>-3</sup> | (9.88~±~0.090) × 10<sup>-9</sup> | (2260.0~±~210.6) × 10<sup>-3</sup> | (670~±~129.6) × 10<sup>-3</sup> | (304~±~179) × 10<sup>-3</sup> | (97.2~±~0.4) × 10<sup>-3</sup> |
+| Wrapper array   | (778~±~12.0) × 10<sup>-3</sup> | (0.39~±~0.005) × 10<sup>-9</sup> | (33.1~±~0.5) × 10<sup>-3</sup>     | (431~±~48.7) × 10<sup>-3</sup>  | (236~±~130) × 10<sup>-3</sup> | (88.9~±~0.2) × 10<sup>-3</sup> |
+| Kokkos view     | (738~±~15.0) × 10<sup>-3</sup> | (1.10~±~0.004) × 10<sup>-9</sup> | (58.0~±~0.6) × 10<sup>-3</sup>     | (412~±~34.8) × 10<sup>-3</sup>  | (289~±~186) × 10<sup>-3</sup> | (87.3~±~0.1) × 10<sup>-3</sup> |
 
 <p align="center">
 <img src="images/perf.png" alt="Performance graph">
