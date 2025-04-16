@@ -56,3 +56,22 @@ void benchmark_set_view(benchmark::State &state) {
 }
 
 BENCHMARK(benchmark_set_view);
+
+void benchmark_set_view_unmanaged(benchmark::State &state) {
+  Kokkos::View<int ******> data{"data", 30, 30, 30, 30, 30, 30};
+
+  Kokkos::View<int ******, Kokkos::MemoryTraits<Kokkos::Unmanaged>> dataUnmanaged(data);
+
+  while (state.KeepRunning()) {
+    Kokkos::parallel_for(
+        "benchmark_set_view",
+        Kokkos::MDRangePolicy({0, 0, 0, 0, 0, 0}, {30, 30, 30, 30, 30, 30}),
+        KOKKOS_LAMBDA(int const i, int const j, int const k, int const l,
+                      int const m, int const n) {
+          dataUnmanaged(i, j, k, l, m, n) = i + j + k + l + m + n;
+        });
+    Kokkos::fence();
+  }
+}
+
+BENCHMARK(benchmark_set_view_unmanaged);

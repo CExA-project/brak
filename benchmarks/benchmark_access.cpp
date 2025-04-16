@@ -38,3 +38,17 @@ void benchmark_set_view(benchmark::State &state) {
 }
 
 BENCHMARK(benchmark_set_view);
+
+void benchmark_set_view_unmanaged(benchmark::State &state) {
+  Kokkos::View<int ********, Kokkos::DefaultHostExecutionSpace::memory_space>
+      data{"data", 2, 2, 2, 2, 2, 2, 2, 2};
+
+  Kokkos::View<int ********, Kokkos::DefaultHostExecutionSpace::memory_space, Kokkos::MemoryTraits<Kokkos::Unmanaged>>
+      dataUnmanaged(data);
+
+  while (state.KeepRunning()) {
+    dataUnmanaged(1, 1, 1, 1, 1, 1, 1, 1) = 10;
+  }
+}
+
+BENCHMARK(benchmark_set_view_unmanaged);

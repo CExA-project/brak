@@ -10,6 +10,17 @@ target_link_libraries(
 )
 
 add_library(
+    compile-benchmark-view-unmanaged
+    OBJECT
+    compile_benchmark_view_unmanaged.cpp
+)
+
+target_link_libraries(
+    compile-benchmark-view-unmanaged
+    Brak::brak
+)
+
+add_library(
     compile-benchmark-subview
     OBJECT
     compile_benchmark_subview.cpp
