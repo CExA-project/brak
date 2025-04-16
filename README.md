@@ -186,9 +186,9 @@ Performance ratios are expressed with standard deviation, between parentheses.
 
 | Implementation  | Build Serial                   | Access Serial                    | Nested-for Serial                  | Parallel-for Serial             | Parallel-for OpenMP           | Parallel-for Cuda              |
 |-----------------|--------------------------------|----------------------------------|------------------------------------|---------------------------------|-------------------------------|--------------------------------|
-| Wrapper subview | (950~±~11.7) × 10<sup>-3</sup> | (9.88~±~0.090) × 10<sup>-9</sup> | (2260.0~±~210.6) × 10<sup>-3</sup> | (670~±~129.6) × 10<sup>-3</sup> | (304~±~179) × 10<sup>-3</sup> | (97.2~±~0.4) × 10<sup>-3</sup> |
-| Wrapper array   | (778~±~12.0) × 10<sup>-3</sup> | (0.39~±~0.005) × 10<sup>-9</sup> | (33.1~±~0.5) × 10<sup>-3</sup>     | (431~±~48.7) × 10<sup>-3</sup>  | (236~±~130) × 10<sup>-3</sup> | (88.9~±~0.2) × 10<sup>-3</sup> |
-| Kokkos view     | (738~±~15.0) × 10<sup>-3</sup> | (1.10~±~0.004) × 10<sup>-9</sup> | (58.0~±~0.6) × 10<sup>-3</sup>     | (412~±~34.8) × 10<sup>-3</sup>  | (289~±~186) × 10<sup>-3</sup> | (87.3~±~0.1) × 10<sup>-3</sup> |
+| Wrapper subview | (950 ± 11.7) × 10<sup>-3</sup> | (9.88 ± 0.090) × 10<sup>-9</sup> | (2260.0 ± 210.6) × 10<sup>-3</sup> | (670 ± 129.6) × 10<sup>-3</sup> | (304 ± 179) × 10<sup>-3</sup> | (97.2 ± 0.4) × 10<sup>-3</sup> |
+| Wrapper array   | (778 ± 12.0) × 10<sup>-3</sup> | (0.39 ± 0.005) × 10<sup>-9</sup> | (33.1 ± 0.5) × 10<sup>-3</sup>     | (431 ± 48.7) × 10<sup>-3</sup>  | (236 ± 130) × 10<sup>-3</sup> | (88.9 ± 0.2) × 10<sup>-3</sup> |
+| Kokkos view     | (738 ± 15.0) × 10<sup>-3</sup> | (1.10 ± 0.004) × 10<sup>-9</sup> | (58.0 ± 0.6) × 10<sup>-3</sup>     | (412 ± 34.8) × 10<sup>-3</sup>  | (289 ± 186) × 10<sup>-3</sup> | (87.3 ± 0.1) × 10<sup>-3</sup> |
 
 <p align="center">
 <img src="images/perf.png" alt="Performance graph">
@@ -196,19 +196,19 @@ Performance ratios are expressed with standard deviation, between parentheses.
 
 Benchmarks are detailed in the next sections.
 
-In terms of compilation time, building a code using a subview wrapper is 1.28 (± 0.03) times slower than a code using a Kokkos view, and a code using an array wrapper is 1.05 (± 0.03) times slower.
+In terms of compilation time, building a code using a subview wrapper is 1.28 (± 0.03) times slower than a code using a Kokkos view, and a code using an array wrapper is 1.05 (± 0.03) times slower.
 
-When accessing a single element, a subview wrapper is 9 (± 0.08) times slower than a view, and an array wrapper is 2.8 (± 0.005) times faster.
+When accessing a single element, a subview wrapper is 9 (± 0.08) times slower than a view, and an array wrapper is 2.8 (± 0.005) times faster.
 The later is due to reference counting being disabled for wrappers.
 Even when using it, the subview wrapper does not benefit much from it: the same order of magnitude of execution time can be obtained if the initial view is already unmanaged.
 
-For a more realistic use of the wrappers in a `for`-loop, a subview wrapper is 39 (± 0.54) times slower than a view, and an array wrapper is 1.7 (± 0.01) times faster.
+For a more realistic use of the wrappers in a `for`-loop, a subview wrapper is 39 (± 0.54) times slower than a view, and an array wrapper is 1.7 (± 0.01) times faster.
 Frequent accesses to data is less well handled by the subview wrapper.
 Using an already unmanaged view brings the performance of the subview wrapper on par with a Kokkos view.
 
-For a heavy access of elements in a Kokkos `parallel_for` construct, a subview wrapper is 1.63 (± 0.03) times slower than a view for CPU serial execution.
-It is 1.05 (± 0.09) times slower, respectively 1.11 (± 0.004) times slower, for CPU parallel execution, respectively GPU execution, meaning that parallel execution tends to lower the difference.
-An array wrapper is 1.04 (± 0.01) times slower, respectively 1.22 (± 0.07) faster and 1.02 (± 0.003) times slower, for CPU serial execution, respectively CPU parallel execution and GPU execution, which shows that this implementation has a limited impact on performance.
+For a heavy access of elements in a Kokkos `parallel_for` construct, a subview wrapper is 1.63 (± 0.03) times slower than a view for CPU serial execution.
+It is 1.05 (± 0.09) times slower, respectively 1.11 (± 0.004) times slower, for CPU parallel execution, respectively GPU execution, meaning that parallel execution tends to lower the difference.
+An array wrapper is 1.04 (± 0.01) times slower, respectively 1.22 (± 0.07) faster and 1.02 (± 0.003) times slower, for CPU serial execution, respectively CPU parallel execution and GPU execution, which shows that this implementation has a limited impact on performance.
 
 To conclude, using an array wrapper does not lead to a significant overhead compared with using a Kokkos view.
 
